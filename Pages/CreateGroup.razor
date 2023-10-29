@@ -1,0 +1,10 @@
+﻿@page "/groups/create"
+
+<h3>Create Group</h3>
+
+<EditForm Model="Group" OnSubmit="HandleSubmit">
+    <label for="name">Name</label>
+    <InputText @bind-Value="@Group.Name" class="form-control" id="name"/>
+
+    <button type="submit" class="btn btn-primary mt-2">Create</button>
+</EditForm>
