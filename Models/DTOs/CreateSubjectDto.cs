@@ -2,8 +2,7 @@
 
 namespace ToDoListBlazorClient.Models.DTOs;
 
-public class CreateGroupDto
+public class CreateSubjectDto
 {
-    [Required]
-    public string Name { get; set; } = "New Group";
+    [Required] public string Name { get; set; } = "New Subject";
 }

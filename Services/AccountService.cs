@@ -44,14 +44,24 @@ public class AccountService : IAccountService
 
     public async Task LogoutAsync()
     {
-        await _httpClient.DeleteAsync("users");
-        await _localStorage.RemoveItemAsync("user");
-        await _localStorage.RemoveItemAsync("token");
+        var response = await _httpClient.DeleteAsync("users");
+
+        if (response.IsSuccessStatusCode)
+        {
+            await _localStorage.RemoveItemAsync("user");
+        }
     }
 
     public async Task SetUserAsync()
     {
         UserDto? user = await _localStorage.GetItemAsync<UserDto>("user");
+
+        if (user is not null)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", user.Token);
+        }
+        
         CurrentUser = user;
     }
 
@@ -60,8 +70,8 @@ public class AccountService : IAccountService
         UserDto? user = await response.Content.ReadFromJsonAsync<UserDto>();
         string? token = response.Headers.GetValues("Authorization").FirstOrDefault();
         if (user is null || token is null) throw new Exception("Invalid response");
+        user.Token = token.Split(' ')[1].TrimEnd('"');
         await _localStorage.SetItemAsync("user", user);
-        await _localStorage.SetItemAsync("token", token.Split(' ')[1].TrimEnd('"'));
         _httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", token.Split(' ')[1].TrimEnd('"'));
         return user;

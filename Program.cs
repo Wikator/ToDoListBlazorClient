@@ -12,6 +12,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:3000") });
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();

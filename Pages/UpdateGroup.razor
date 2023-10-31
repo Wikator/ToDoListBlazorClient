@@ -9,8 +9,8 @@
 else
 {
     <EditForm Model="Group" OnSubmit="HandleSubmit">
-        <label for="name">Name</label>
-        <InputText @bind-Value="@Group.Name" class="form-control" id="name"/>
+        <DataAnnotationsValidator />
+        <TextInputField @bind-Value="Group.Name" ValidationFor="@(() => Group.Name)"></TextInputField>
 
         <button type="submit" class="btn btn-primary mt-2">Update</button>
     </EditForm>

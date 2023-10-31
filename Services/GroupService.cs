@@ -9,12 +9,10 @@ namespace ToDoListBlazorClient.Services;
 public class GroupService : IGroupService
 {
     private readonly HttpClient _httpClient;
-    private readonly ILocalStorageService _localStorage;
 
-    public GroupService(HttpClient httpClient, ILocalStorageService localStorage)
+    public GroupService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _localStorage = localStorage;
     }
 
     public async Task<IEnumerable<GroupDto>> GetGroups()

@@ -1,0 +1,10 @@
+﻿@inherits InputBase<string>
+
+@if (Value is not null)
+{
+    <label for="@Id">@Label</label>
+    <div class="col-sm-10">
+        <input @bind="CurrentValue" class="form-control" id="@Id"/>
+        <ValidationMessage For="@ValidationFor" />
+    </div>
+}

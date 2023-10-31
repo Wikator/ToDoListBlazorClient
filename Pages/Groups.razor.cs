@@ -4,7 +4,8 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages;
 
-public partial class Groups : ComponentBase
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class Groups
 {
     [Inject] public required IGroupService GroupService { get; init; }
 

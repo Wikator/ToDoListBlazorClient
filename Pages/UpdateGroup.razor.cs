@@ -4,7 +4,7 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages;
 
-public partial class UpdateGroup : ComponentBase
+public partial class UpdateGroup
 {
     [Parameter] public int? Id { get; init; }
 
