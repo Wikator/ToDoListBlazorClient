@@ -13,7 +13,7 @@ public class SubjectService : ISubjectService
     {
         _http = http;
 
-        accountService.SetUserAsync();
+        // accountService.SetUserAsync();
     }
 
     public async Task<IEnumerable<SubjectDto>> GetSubjects()

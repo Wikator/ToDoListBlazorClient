@@ -1,11 +1,11 @@
 ﻿using ToDoListBlazorClient.Models.DTOs;
+using ToDoListBlazorClient.Services.Base;
 
 namespace ToDoListBlazorClient.Services.Contracts;
 
 public interface IAccountService
 {
-    Task<UserDto?> SignInAsync(LoginDto login);
-    Task<UserDto?> RegisterAsync(RegisterDto register);
-    Task LogoutAsync();
-    Task SetUserAsync();
+    Task<Response<UserDto>> SignInAsync(LoginDto login);
+    Task<Response<UserDto>> RegisterAsync(RegisterDto register);
+    Task<Response> LogoutAsync();
 }

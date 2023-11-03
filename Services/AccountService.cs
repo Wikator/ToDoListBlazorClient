@@ -1,79 +1,118 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
 using System.Net.Http.Json;
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using ToDoListBlazorClient.Models.DTOs;
+using ToDoListBlazorClient.Providers;
+using ToDoListBlazorClient.Services.Base;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services;
 
-public class AccountService : IAccountService
+public class AccountService : BaseHttpService, IAccountService
 {
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
+    private readonly ApiAuthenticationStateProvider _authStateProvider;
 
-    public AccountService(HttpClient httpClient, ILocalStorageService localStorage)
+    public AccountService(HttpClient httpClient, ILocalStorageService localStorage,
+        AuthenticationStateProvider authStateProvider) : base(localStorage, httpClient)
     {
         _httpClient = httpClient;
         _localStorage = localStorage;
+        _authStateProvider = (ApiAuthenticationStateProvider)authStateProvider;
     }
 
-    public UserDto? CurrentUser { get; private set; }
-
-
-    public async Task<UserDto?> SignInAsync(LoginDto login)
+    public async Task<Response<UserDto>> SignInAsync(LoginDto login)
     {
+        var response = new Response<UserDto>();
+        
         object body = new
         {
             user = login
         };
 
-        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("users/sign_in", body);
-        return await GetUser(response);
+        var responseFromApi = await _httpClient.PostAsJsonAsync("users/sign_in", body);
+
+        if (!responseFromApi.IsSuccessStatusCode)
+        {
+            response.IsSuccess = false;
+            response.Message = await responseFromApi.Content.ReadAsStringAsync();
+            return response;
+        }
+        
+        var user = await responseFromApi.Content.ReadFromJsonAsync<UserDto>();
+        var token = responseFromApi.Headers.GetValues("Authorization").FirstOrDefault();
+        
+        if (user is null || token is null)
+        {
+            response.IsSuccess = false;
+            response.Message = "Something went wrong";
+            return response;
+        }
+        
+        token = token.Split(' ')[1].TrimEnd('"');
+        await _localStorage.SetItemAsync("accessToken", token);
+        _authStateProvider.LoggedIn(token);
+        response.Data = user;
+        return response;
     }
 
-    public async Task<UserDto?> RegisterAsync(RegisterDto register)
+    public async Task<Response<UserDto>> RegisterAsync(RegisterDto register)
     {
+        var response = new Response<UserDto>();
+        
         object body = new
         {
             user = register
         };
 
-        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("users", body);
-        return await GetUser(response);
-    }
-
-    public async Task LogoutAsync()
-    {
-        var response = await _httpClient.DeleteAsync("users");
-
-        if (response.IsSuccessStatusCode)
+        var responseFromApi = await _httpClient.PostAsJsonAsync("users", body);
+        
+        if (!responseFromApi.IsSuccessStatusCode)
         {
-            await _localStorage.RemoveItemAsync("user");
-        }
-    }
-
-    public async Task SetUserAsync()
-    {
-        UserDto? user = await _localStorage.GetItemAsync<UserDto>("user");
-
-        if (user is not null)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", user.Token);
+            response.IsSuccess = false;
+            response.Message = await responseFromApi.Content.ReadAsStringAsync();
+            return response;
         }
         
-        CurrentUser = user;
+        var user = await responseFromApi.Content.ReadFromJsonAsync<UserDto>();
+        var token = responseFromApi.Headers.GetValues("Authorization").FirstOrDefault();
+        
+        if (user is null || token is null)
+        {
+            response.IsSuccess = false;
+            response.Message = "Something went wrong";
+            return response;
+        }
+        
+        token = token.Split(' ')[1].TrimEnd('"');
+        await _localStorage.SetItemAsync("accessToken", token);
+        _authStateProvider.LoggedIn(token);
+        response.Data = user;
+        return response;
     }
 
-    private async Task<UserDto> GetUser(HttpResponseMessage response)
+    public async Task<Response> LogoutAsync()
     {
-        UserDto? user = await response.Content.ReadFromJsonAsync<UserDto>();
-        string? token = response.Headers.GetValues("Authorization").FirstOrDefault();
-        if (user is null || token is null) throw new Exception("Invalid response");
-        user.Token = token.Split(' ')[1].TrimEnd('"');
-        await _localStorage.SetItemAsync("user", user);
-        _httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", token.Split(' ')[1].TrimEnd('"'));
-        return user;
+        await AddJwtTokenAsync();
+        var response = new Response();
+        var responseFromApi = await _httpClient.DeleteAsync("users/sign_out");
+
+        if (!responseFromApi.IsSuccessStatusCode)
+        {
+            if (responseFromApi.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                RemoveJwtToken();
+                await _authStateProvider.LoggedOut();
+            }
+            response.IsSuccess = false;
+            response.Message = await responseFromApi.Content.ReadAsStringAsync();
+            return response;
+        }
+
+        RemoveJwtToken();
+        await _authStateProvider.LoggedOut();
+        return new Response();
     }
 }

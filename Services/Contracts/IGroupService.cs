@@ -1,16 +1,17 @@
 ﻿using ToDoListBlazorClient.Models.DTOs;
+using ToDoListBlazorClient.Services.Base;
 
 namespace ToDoListBlazorClient.Services.Contracts;
 
 public interface IGroupService
 {
-    Task<IEnumerable<GroupDto>> GetGroups();
+    Task<Response<IEnumerable<GroupDto>>> GetGroups();
 
-    Task<GroupDto> GetGroup(int id);
+    Task<Response<GroupDto>> GetGroup(int id);
 
-    Task<GroupDto> CreateGroup(CreateGroupDto group);
+    Task<Response<GroupDto>> CreateGroup(CreateGroupDto group);
 
-    Task<GroupDto> UpdateGroup(int id, CreateGroupDto group);
+    Task<Response<GroupDto>> UpdateGroup(int id, CreateGroupDto group);
 
-    Task DeleteGroup(int id);
+    Task<Response> DeleteGroup(int id);
 }

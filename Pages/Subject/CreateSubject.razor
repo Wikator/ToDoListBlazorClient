@@ -1,0 +1,9 @@
+﻿@page "/Subjects/Create"
+<h3>CreateSubject</h3>
+
+<EditForm Model="Subject" OnSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)" />
+    
+    <button type="submit" class="btn btn-primary mt-2" disabled="@(!context.Validate())">Create</button>
+</EditForm>

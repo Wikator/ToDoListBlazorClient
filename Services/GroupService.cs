@@ -2,71 +2,40 @@
 using System.Net.Http.Json;
 using Blazored.LocalStorage;
 using ToDoListBlazorClient.Models.DTOs;
+using ToDoListBlazorClient.Services.Base;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services;
 
-public class GroupService : IGroupService
+public class GroupService : BaseHttpService, IGroupService
 {
-    private readonly HttpClient _httpClient;
-
-    public GroupService(HttpClient httpClient)
+    public GroupService(HttpClient httpClient,
+        ILocalStorageService localStorage) : base(localStorage, httpClient)
     {
-        _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<GroupDto>> GetGroups()
+    public async Task<Response<IEnumerable<GroupDto>>> GetGroups()
     {
-        HttpResponseMessage response = await _httpClient.GetAsync("groups");
-
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            Console.WriteLine("Failed to authorize");
-            return Enumerable.Empty<GroupDto>();
-        }
-
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Something went wrong");
-
-        return await response.Content.ReadFromJsonAsync<IEnumerable<GroupDto>>()
-               ?? throw new Exception("Something went wrong");
+        return await SimpleGetAsync<IEnumerable<GroupDto>>("groups");
     }
 
-    public async Task<GroupDto> GetGroup(int id)
+    public async Task<Response<GroupDto>> GetGroup(int id)
     {
-        HttpResponseMessage response = await _httpClient.GetAsync($"groups/{id}");
-
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Something went wrong");
-
-        return await response.Content.ReadFromJsonAsync<GroupDto>()
-               ?? throw new Exception("Something went wrong");
+        return await SimpleGetAsync<GroupDto>($"groups/{id}");
     }
 
-    public async Task<GroupDto> CreateGroup(CreateGroupDto group)
+    public async Task<Response<GroupDto>> CreateGroup(CreateGroupDto group)
     {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("groups", group);
-
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Something went wrong");
-
-        return await response.Content.ReadFromJsonAsync<GroupDto>()
-               ?? throw new Exception("Something went wrong");
+        return await SimplePostAsync<GroupDto, CreateGroupDto>(group, "groups");
     }
 
-    public async Task<GroupDto> UpdateGroup(int id, CreateGroupDto group)
+    public async Task<Response<GroupDto>> UpdateGroup(int id, CreateGroupDto group)
     {
-        HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"groups/{id}", group);
-
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Something went wrong");
-
-        return await response.Content.ReadFromJsonAsync<GroupDto>()
-               ?? throw new Exception("Something went wrong");
+        return await SimplePutAsync<GroupDto, CreateGroupDto>(group, $"groups/{id}");
     }
 
-    public Task DeleteGroup(int id)
+    public async Task<Response> DeleteGroup(int id)
     {
-        throw new NotImplementedException();
+        return await SimpleDeleteAsync($"groups/{id}");
     }
 }

@@ -2,7 +2,7 @@
 using ToDoListBlazorClient.Models.DTOs;
 using ToDoListBlazorClient.Services.Contracts;
 
-namespace ToDoListBlazorClient.Pages;
+namespace ToDoListBlazorClient.Pages.Subject;
 
 public partial class Subjects
 { 
@@ -12,7 +12,7 @@ public partial class Subjects
    [Inject]
    public required NavigationManager NavigationManager { get; init; }
     
-   protected IEnumerable<SubjectDto>? SubjectList { get; private set; }
+   private IEnumerable<SubjectDto>? SubjectList { get; set; }
 
    protected override async Task OnInitializedAsync()
    {
@@ -21,11 +21,11 @@ public partial class Subjects
 
    private void NavigateToCreateSubject()
    {
-      throw new NotImplementedException();
+      NavigationManager.NavigateTo("/subjects/create");
    }
 
    private void NavigateToUpdateSubject(int id)
    {
-      throw new NotImplementedException();
+      NavigationManager.NavigateTo($"subject/{id}");
    }
 }

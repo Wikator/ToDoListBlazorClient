@@ -1,9 +1,15 @@
 ﻿@page "/Login"
-@using ToDoListBlazorClient.Services.Contracts
+@using Microsoft.IdentityModel.Tokens
 @inject IAccountService AccountService;
 @inject NavigationManager NavigationManager;
 <h3>Login</h3>
 
+@if (!Error.IsNullOrEmpty())
+{
+    <div class="alert alert-warning">
+        @Error
+    </div>
+}
 
 <form @onsubmit="Submit">
     <div class="form-group mb-3">
@@ -20,14 +26,21 @@
 
 @code {
     private readonly LoginDto login = new();
+    private string? Error { get; set; }
 
-    private async void Submit()
+    private async Task Submit()
     {
-        if (await AccountService.SignInAsync(login) is not null)
+        var response = await AccountService.SignInAsync(login);
+        Console.WriteLine(response.Message);
+
+        if (response.IsSuccess)
         {
             NavigationManager.NavigateTo("/");
         }
-        ;
+        else
+        {
+            Error = response.Message;
+        }
     }
 
 }

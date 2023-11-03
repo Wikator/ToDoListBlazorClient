@@ -6,7 +6,6 @@
         </button>
     </div>
 </div>
-
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
@@ -33,6 +32,20 @@
             <NavLink class="nav-link" href="subjects">
                 <span class="oi oi-book" aria-hidden="true"></span> Subjects
             </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink class="nav-link" href="subjects">
+                        <span class="oi oi-book" aria-hidden="true"></span> Authorized
+                    </NavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="nav-link" href="subjects">
+                        <span class="oi oi-book" aria-hidden="true"></span> Not Authorized
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
     </nav>
 </div>

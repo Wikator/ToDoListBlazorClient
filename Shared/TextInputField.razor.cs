@@ -10,6 +10,8 @@ public partial class TextInputField : InputBase<string>
     [Parameter] public string? Id { get; set; }
     [Parameter] public string? Label { get; set; }
 
+    [Parameter] public string Type { get; set; } = "text";
+
     protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
     {
         result = value;

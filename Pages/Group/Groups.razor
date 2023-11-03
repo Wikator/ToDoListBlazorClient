@@ -1,0 +1,61 @@
+﻿@page "/Groups"
+@using Microsoft.IdentityModel.Tokens
+
+<div class="mb-2 mx-2 d-flex justify-content-between">
+    <div>
+        <h1>Groups</h1>
+    </div>
+    <div>
+        <button @onclick="NavigateToCreateGroup" class="btn btn-primary">Create New</button>
+    </div>
+</div>
+
+@if (Response is null)
+{
+    <h2>Loading...</h2>
+}
+else
+{
+    @if (!Response.IsSuccess)
+    {
+        <div class="alert alert-danger">
+            @Response.Message
+        </div>
+    }
+    else
+    {
+        @if (!ErrorMessages.IsNullOrEmpty())
+        {
+            foreach (var message in ErrorMessages)
+            {
+                <div class="alert alert-danger">
+                    @message
+                </div>
+            }
+        }
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var group in Response.Data ?? new List<GroupDto>())
+                {
+                    <tr>
+                        <td>@group.Id</td>
+                        <td>@group.Name</td>
+                        <td style="width:6%">
+                            <button class="btn btn-info" @onclick="() => NavigateToUpdateGroup(group.Id)">Update</button>
+                            <button class="btn btn-info" @onclick="() => DeleteGroup(group.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+}

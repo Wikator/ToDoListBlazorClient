@@ -4,10 +4,23 @@
 
 @if (Group is null)
 {
-    <p>Loading...</p>
+    if (GetErrorMessage is null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <p>@GetErrorMessage</p>
+    }
 }
 else
 {
+    @if (PutErrorMessage is not null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @PutErrorMessage
+        </div>
+    }
     <EditForm Model="Group" OnSubmit="HandleSubmit">
         <DataAnnotationsValidator />
         <TextInputField @bind-Value="Group.Name" ValidationFor="@(() => Group.Name)"></TextInputField>

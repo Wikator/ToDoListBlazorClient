@@ -2,7 +2,7 @@
 using ToDoListBlazorClient.Models.DTOs;
 using ToDoListBlazorClient.Services.Contracts;
 
-namespace ToDoListBlazorClient.Pages;
+namespace ToDoListBlazorClient.Pages.Group;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public partial class CreateGroup
@@ -10,12 +10,22 @@ public partial class CreateGroup
     [Inject] public required IGroupService GroupService { get; init; }
 
     [Inject] public required NavigationManager NavigationManager { get; init; }
+    
+    private string? ErrorMessage { get; set; }
 
-    protected CreateGroupDto Group { get; } = new();
+    private CreateGroupDto Group { get; } = new();
 
     protected async Task HandleSubmit()
     {
-        await GroupService.CreateGroup(Group);
-        NavigationManager.NavigateTo("groups");
+        var response = await GroupService.CreateGroup(Group);
+
+        if (response.IsSuccess)
+        {
+            NavigationManager.NavigateTo("/groups");
+        }
+        else
+        {
+            ErrorMessage = response.Message;
+        }
     }
 }
