@@ -13,10 +13,23 @@ public partial class Subjects
    public required NavigationManager NavigationManager { get; init; }
     
    private IEnumerable<SubjectDto>? SubjectList { get; set; }
+   
+   private string? GetErrorMessage { get; set; }
+   
+   private List<string?> DeleteErrorMessages { get; set; } = new();
 
    protected override async Task OnInitializedAsync()
    {
-      SubjectList = await SubjectService.GetSubjects();
+      var response = await SubjectService.GetSubjects();
+
+      if (!response.IsSuccess)
+      {
+         GetErrorMessage = response.Message;
+      }
+      else
+      {
+         SubjectList = response.Data;
+      }
    }
 
    private void NavigateToCreateSubject()
@@ -26,6 +39,20 @@ public partial class Subjects
 
    private void NavigateToUpdateSubject(int id)
    {
-      NavigationManager.NavigateTo($"subject/{id}");
+      NavigationManager.NavigateTo($"subjects/{id}");
+   }
+   
+   private async Task DeleteSubject(int id)
+   {
+      var response = await SubjectService.DeleteSubject(id);
+      
+      if (!response.IsSuccess)
+      {
+         DeleteErrorMessages.Add(response.Message);
+      }
+      else
+      {
+         SubjectList = SubjectList?.Where(s => s.Id != id);
+      }
    }
 }

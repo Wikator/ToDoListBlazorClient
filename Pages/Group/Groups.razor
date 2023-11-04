@@ -50,7 +50,7 @@ else
                         <td>@group.Name</td>
                         <td style="width:6%">
                             <button class="btn btn-info" @onclick="() => NavigateToUpdateGroup(group.Id)">Update</button>
-                            <button class="btn btn-info" @onclick="() => DeleteGroup(group.Id)">Delete</button>
+                            <button class="btn btn-danger" @onclick="() => DeleteGroup(group.Id)">Delete</button>
                         </td>
                     </tr>
                 }

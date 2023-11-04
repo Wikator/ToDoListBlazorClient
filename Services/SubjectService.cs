@@ -1,54 +1,41 @@
-﻿using System.Net.Http.Json;
-using ToDoListBlazorClient.Extensions;
+﻿using Blazored.LocalStorage;
 using ToDoListBlazorClient.Models.DTOs;
+using ToDoListBlazorClient.Services.Base;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services;
 
-public class SubjectService : ISubjectService
+public class SubjectService : BaseHttpService, ISubjectService
 {
-    private readonly HttpClient _http;
-
-    public SubjectService(HttpClient http, IAccountService accountService)
+    private const string BaseUrl = "subjects/";
+    
+    public SubjectService(ILocalStorageService localStorage,
+        HttpClient http) : base(localStorage, http)
     {
-        _http = http;
-
-        // accountService.SetUserAsync();
     }
 
-    public async Task<IEnumerable<SubjectDto>> GetSubjects()
+    public async Task<Response<IEnumerable<SubjectDto>>> GetSubjects()
     {
-        var response = await _http.GetAsync("subjects");
-
-        return await response.ReadJsonFromBodyAsync<IEnumerable<SubjectDto>>();
+        return await SimpleGetAsync<IEnumerable<SubjectDto>>(BaseUrl);
     }
 
-    public async Task<SubjectDto> GetSubject(int id)
+    public async Task<Response<SubjectDto>> GetSubject(int id)
     {
-        var response = await _http.GetAsync($"subjects/{id}");
-
-        return await response.ReadJsonFromBodyAsync<SubjectDto>();
+        return await SimpleGetAsync<SubjectDto>(BaseUrl + id);
     }
 
-    public async Task<SubjectDto> CreateSubject(CreateSubjectDto subject)
+    public async Task<Response<SubjectDto>> CreateSubject(CreateSubjectDto subject)
     {
-        var response = await _http.PostAsJsonAsync("subjects", subject);
-
-        return await response.ReadJsonFromBodyAsync<SubjectDto>();
+        return await SimplePostAsync<SubjectDto, CreateSubjectDto>(subject, BaseUrl);
     }
 
-    public async Task<SubjectDto> UpdateSubject(CreateSubjectDto subject)
+    public async Task<Response<SubjectDto>> UpdateSubject(int id, CreateSubjectDto subject)
     {
-        var response = await _http.PutAsJsonAsync("subjects", subject);
-
-        return await response.ReadJsonFromBodyAsync<SubjectDto>();
+        return await SimplePutAsync<SubjectDto, CreateSubjectDto>(subject, BaseUrl + id);
     }
 
-    public async Task DeleteGroup(int id)
+    public async Task<Response> DeleteSubject(int id)
     {
-        var response = await _http.DeleteAsync($"subjects/{id}");
-
-        if (!response.IsSuccessStatusCode)
-            throw new Exception(await response.Content.ReadAsStringAsync());
+        return await SimpleDeleteAsync(BaseUrl + id);
     }
 }

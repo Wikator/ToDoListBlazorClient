@@ -12,9 +12,15 @@
 @if (SubjectList is null)
 {
     <h2>Loading...</h2>
+    <ErrorMessage Message="@GetErrorMessage" />
 }
 else
 {
+    foreach (var errorMessage in DeleteErrorMessages)
+    {
+        <ErrorMessage Message="@errorMessage" />
+    }
+    
     <div class="table-responsive">
         <table class="table table-striped table-bordered" style="width:100%">
             <thead>
@@ -32,7 +38,7 @@ else
                     <td>@subject.Name</td>
                     <td style="width:6%">
                         <button class="btn btn-info" @onclick="() => NavigateToUpdateSubject(subject.Id)">Update</button>
-                        @* <button class="btn btn-info" routerLink="/groups/update/{{group.id}}">Update</button> *@
+                        <button class="btn btn-danger" @onclick="() => DeleteSubject(subject.Id)">Delete</button>
                     </td>
                 </tr>
             }

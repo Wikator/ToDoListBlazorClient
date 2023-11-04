@@ -11,7 +11,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:3000") });
+builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri("http://localhost:3000") });
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ISubjectService, SubjectService>();

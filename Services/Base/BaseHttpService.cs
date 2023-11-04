@@ -18,12 +18,12 @@ public abstract class BaseHttpService
     protected async Task AddJwtTokenAsync()
     {
         var token = await _localStorage.GetItemAsync<string>("accessToken");
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-    }
-    
-    protected void RemoveJwtToken()
-    {
-        _httpClient.DefaultRequestHeaders.Authorization = null;
+
+        _httpClient.DefaultRequestHeaders.Authorization = token switch
+        {
+            null => null,
+            _ => new AuthenticationHeaderValue("Bearer", token)
+        };
     }
 
     protected static async Task<Response<T>> GenerateFailedResponseAsync<T>(HttpContent? httpContent)

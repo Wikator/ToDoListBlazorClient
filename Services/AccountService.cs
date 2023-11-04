@@ -12,107 +12,74 @@ namespace ToDoListBlazorClient.Services;
 public class AccountService : BaseHttpService, IAccountService
 {
     private readonly HttpClient _httpClient;
-    private readonly ILocalStorageService _localStorage;
     private readonly ApiAuthenticationStateProvider _authStateProvider;
 
     public AccountService(HttpClient httpClient, ILocalStorageService localStorage,
         AuthenticationStateProvider authStateProvider) : base(localStorage, httpClient)
     {
         _httpClient = httpClient;
-        _localStorage = localStorage;
         _authStateProvider = (ApiAuthenticationStateProvider)authStateProvider;
     }
 
     public async Task<Response<UserDto>> SignInAsync(LoginDto login)
     {
-        var response = new Response<UserDto>();
-        
         object body = new
         {
             user = login
         };
 
-        var responseFromApi = await _httpClient.PostAsJsonAsync("users/sign_in", body);
-
-        if (!responseFromApi.IsSuccessStatusCode)
-        {
-            response.IsSuccess = false;
-            response.Message = await responseFromApi.Content.ReadAsStringAsync();
-            return response;
-        }
-        
-        var user = await responseFromApi.Content.ReadFromJsonAsync<UserDto>();
-        var token = responseFromApi.Headers.GetValues("Authorization").FirstOrDefault();
-        
-        if (user is null || token is null)
-        {
-            response.IsSuccess = false;
-            response.Message = "Something went wrong";
-            return response;
-        }
-        
-        token = token.Split(' ')[1].TrimEnd('"');
-        await _localStorage.SetItemAsync("accessToken", token);
-        _authStateProvider.LoggedIn(token);
-        response.Data = user;
-        return response;
+        return await LoginOrRegister("users/sign_in", body);
     }
 
     public async Task<Response<UserDto>> RegisterAsync(RegisterDto register)
     {
-        var response = new Response<UserDto>();
-        
         object body = new
         {
             user = register
         };
 
-        var responseFromApi = await _httpClient.PostAsJsonAsync("users", body);
-        
-        if (!responseFromApi.IsSuccessStatusCode)
-        {
-            response.IsSuccess = false;
-            response.Message = await responseFromApi.Content.ReadAsStringAsync();
-            return response;
-        }
-        
-        var user = await responseFromApi.Content.ReadFromJsonAsync<UserDto>();
-        var token = responseFromApi.Headers.GetValues("Authorization").FirstOrDefault();
-        
-        if (user is null || token is null)
-        {
-            response.IsSuccess = false;
-            response.Message = "Something went wrong";
-            return response;
-        }
-        
-        token = token.Split(' ')[1].TrimEnd('"');
-        await _localStorage.SetItemAsync("accessToken", token);
-        _authStateProvider.LoggedIn(token);
-        response.Data = user;
-        return response;
+        return await LoginOrRegister("users", body);
     }
 
     public async Task<Response> LogoutAsync()
     {
         await AddJwtTokenAsync();
-        var response = new Response();
-        var responseFromApi = await _httpClient.DeleteAsync("users/sign_out");
+        var response = await _httpClient.DeleteAsync("users/sign_out");
 
-        if (!responseFromApi.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
-            if (responseFromApi.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                RemoveJwtToken();
-                await _authStateProvider.LoggedOut();
-            }
-            response.IsSuccess = false;
-            response.Message = await responseFromApi.Content.ReadAsStringAsync();
-            return response;
+            if (response.StatusCode != HttpStatusCode.Unauthorized)
+                return await GenerateFailedResponseAsync(response.Content);
+            
+            await _authStateProvider.LoggedOut();
+
+            return await GenerateFailedResponseAsync(response.Content);
         }
 
-        RemoveJwtToken();
+        _httpClient.DefaultRequestHeaders.Authorization = null;
         await _authStateProvider.LoggedOut();
         return new Response();
+    }
+
+    private async Task<Response<UserDto>> LoginOrRegister(string url, object body)
+    {
+        var response = await _httpClient.PostAsJsonAsync(url, body);
+
+        if (!response.IsSuccessStatusCode)
+            return await GenerateFailedResponseAsync<UserDto>(response.Content);
+        
+        var token = response.Headers.GetValues("Authorization").FirstOrDefault();
+        
+        if (token is null)
+            return await GenerateFailedResponseAsync<UserDto>(null);
+        
+        var user = await GenerateSuccessfulResponseAsync<UserDto>(response.Content);
+
+        if (!user.IsSuccess)
+            return user;
+        
+        token = token.Split(' ')[1].TrimEnd('"');
+        await _authStateProvider.LoggedIn(token);
+        return user;
     }
 }

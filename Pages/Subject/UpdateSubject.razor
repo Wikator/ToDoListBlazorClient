@@ -1,0 +1,25 @@
+﻿@page "/subjects/{id:int}"
+
+<h3>UpdateSubject</h3>
+
+@if (Subject is null)
+{
+    @if (GetErrorMessage is null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <ErrorMessage Message="@GetErrorMessage" />
+    }
+}
+else
+{
+    <EditForm Model="Subject" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ErrorMessage Message="@PutErrorMessage"/>
+        <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)"/>
+        
+        <button type="submit" class="btn btn-primary mt-2">Update</button>
+    </EditForm>
+}

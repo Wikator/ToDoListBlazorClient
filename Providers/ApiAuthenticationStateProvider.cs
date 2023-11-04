@@ -35,8 +35,9 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
         return new AuthenticationState(user);
     }
 
-    public void LoggedIn(string token)
+    public async Task LoggedIn(string token)
     {
+        await _localStorage.SetItemAsync("accessToken", token);
         var decodedToken = _tokenHandler.ReadJwtToken(token);
         var claims = decodedToken.Claims;
         var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));

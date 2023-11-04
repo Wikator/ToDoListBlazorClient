@@ -13,10 +13,20 @@ public partial class CreateSubject
     public required NavigationManager NavigationManager { get; init; }
     
     private CreateSubjectDto Subject { get; } = new();
+    
+    private string? ErrorMessage { get; set; }
 
     private async Task HandleSubmit()
     {
-        await SubjectService.CreateSubject(Subject);
-        NavigationManager.NavigateTo("subjects");
+        var response = await SubjectService.CreateSubject(Subject);
+
+        if (!response.IsSuccess)
+        {
+            ErrorMessage = response.Message;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/subjects");
+        }
     }
 }

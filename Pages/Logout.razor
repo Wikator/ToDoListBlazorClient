@@ -1,0 +1,32 @@
+﻿@page "/Logout"
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+
+
+@if (ErrorMessage is null)
+{
+    <p>Attempting logout...</p>
+}
+else
+{
+    <ErrorMessage Message="@ErrorMessage" />
+}
+
+@code {
+    private string? ErrorMessage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await AccountService.LogoutAsync();
+
+        if (response.IsSuccess)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = response.Message;
+        }
+    }
+
+}
