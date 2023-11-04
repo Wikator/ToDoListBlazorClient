@@ -1,22 +1,21 @@
-﻿@page "/Groups"
+﻿@page "/Categories"
 
 <div class="mb-2 mx-2 d-flex justify-content-between">
     <div>
-        <h1>Groups</h1>
+        <h1>Categories</h1>
     </div>
     <div>
-        <button @onclick="NavigateToCreateGroup" class="btn btn-primary">Create New</button>
+        <button @onclick="NavigateToCreateCategory" class="btn btn-primary">Create New</button>
     </div>
 </div>
 
-@if (GroupList is null)
+@if (CategoryList is null)
 {
     <h2>Loading...</h2>
     <ErrorMessage Message="@GetErrorMessage" />
 }
 else
 {
-    
     foreach (var errorMessage in DeleteErrorMessages)
     {
         <ErrorMessage Message="@errorMessage" />
@@ -32,14 +31,14 @@ else
             </tr>
             </thead>
             <tbody>
-            @foreach (var group in GroupList ?? new List<GroupDto>())
+            @foreach (var subject in CategoryList)
             {
                 <tr>
-                    <td>@group.Id</td>
-                    <td>@group.Name</td>
+                    <td>@subject.Id</td>
+                    <td>@subject.Name</td>
                     <td style="width:6%">
-                        <button class="btn btn-info" @onclick="() => NavigateToUpdateGroup(group.Id)">Update</button>
-                        <button class="btn btn-danger" @onclick="() => DeleteGroup(group.Id)">Delete</button>
+                        <button class="btn btn-info" @onclick="() => NavigateToUpdateCategory(subject.Id)">Update</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteCategory(subject.Id)">Delete</button>
                     </td>
                 </tr>
             }

@@ -3,14 +3,9 @@
 <h3>Create Group</h3>
 
 <EditForm Model="Group" OnValidSubmit="HandleSubmit">
-    @if (ErrorMessage is not null)
-    {
-        <div class="alert alert-danger" role="alert">
-            @ErrorMessage
-        </div>
-    }
+    <ErrorMessage Message="@ErrorMessage"></ErrorMessage>
     <DataAnnotationsValidator/>
     <TextInputField @bind-Value="Group.Name" Label="Name" ValidationFor="@(() => Group.Name)"/>
 
-    <button type="submit" class="btn btn-primary mt-2" disabled="@(!context.Validate())">Create</button>
+    <SubmitButton IsValid="@context.Validate()">Create</SubmitButton>
 </EditForm>

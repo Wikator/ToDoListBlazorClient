@@ -1,0 +1,24 @@
+﻿@page "/categories/{Id:int}"
+
+<h3>UpdateCategory</h3>
+
+@if (CategoryDto is null)
+{
+    if (GetErrorMessage is null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <ErrorMessage Message="@GetErrorMessage" />
+    }
+}
+else
+{
+    <EditForm Model="CategoryDto" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <TextInputField @bind-Value="CategoryDto.Name" Label="Name" ValidationFor="@(() => CategoryDto.Name)" />
+        
+        <SubmitButton IsValid="@context.Validate()">Update</SubmitButton>
+    </EditForm>
+}

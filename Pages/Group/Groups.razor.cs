@@ -12,13 +12,24 @@ public partial class Groups
 
     [Inject] public required NavigationManager NavigationManager { get; init; }
 
-    private Response<IEnumerable<GroupDto>>? Response { get; set; }
+    private IEnumerable<GroupDto>? GroupList { get; set; }
+
     
-    private List<string?> ErrorMessages { get; } = new();
+    private string? GetErrorMessage { get; set; }
+    private List<string?> DeleteErrorMessages { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        Response = await GroupService.GetGroups();
+        var response = await GroupService.SimpleGetAsync();
+        
+        if (!response.IsSuccess)
+        {
+            GetErrorMessage = response.Message;
+        }
+        else
+        {
+            GroupList = response.Data;
+        }
     }
 
     private void NavigateToCreateGroup()
@@ -33,18 +44,15 @@ public partial class Groups
     
     private async Task DeleteGroup(int groupId)
     {
-        var response = await GroupService.DeleteGroup(groupId);
+        var response = await GroupService.SimpleDeleteAsync(groupId);
         
         if (!response.IsSuccess)
         {
-            ErrorMessages.Add(response.Message);
+            DeleteErrorMessages.Add(response.Message);
         }
         else
         {
-            if (Response is not null)
-            {
-                Response.Data = Response.Data?.Where(g => g.Id != groupId);
-            }
+            GroupList = GroupList?.Where(g => g.Id != groupId);
         }
     }
 }

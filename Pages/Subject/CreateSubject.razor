@@ -6,5 +6,5 @@
     <DataAnnotationsValidator/>
     <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)"/>
 
-    <button type="submit" class="btn btn-primary mt-2" disabled="@(!context.Validate())">Create</button>
+    <SubmitButton IsValid="@context.Validate()">Create</SubmitButton>
 </EditForm>

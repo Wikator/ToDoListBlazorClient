@@ -17,7 +17,7 @@ public partial class CreateGroup
 
     protected async Task HandleSubmit()
     {
-        var response = await GroupService.CreateGroup(Group);
+        var response = await GroupService.SimplePostAsync(Group);
 
         if (response.IsSuccess)
         {

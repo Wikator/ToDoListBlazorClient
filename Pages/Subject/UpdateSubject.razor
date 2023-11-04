@@ -20,6 +20,6 @@ else
         <ErrorMessage Message="@PutErrorMessage"/>
         <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)"/>
         
-        <button type="submit" class="btn btn-primary mt-2">Update</button>
+        <SubmitButton IsValid="@context.Validate()">Update</SubmitButton>
     </EditForm>
 }

@@ -15,6 +15,7 @@ builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri("http://l
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ISubjectService, SubjectService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 builder.Services.AddBlazoredLocalStorage();

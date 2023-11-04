@@ -23,7 +23,7 @@ public partial class UpdateSubject
         }
         else
         {
-            var response = await SubjectService.GetSubject(Id.Value);
+            var response = await SubjectService.SimpleGetAsync(Id.Value);
             
             if (!response.IsSuccess)
             {
@@ -44,7 +44,7 @@ public partial class UpdateSubject
         if (Subject is null || Id is null)
             return;
         
-        var response = await SubjectService.UpdateSubject(Id.Value, Subject);
+        var response = await SubjectService.SimplePutAsync(Id.Value, Subject);
         
         if (!response.IsSuccess)
         {

@@ -16,11 +16,11 @@ public partial class Subjects
    
    private string? GetErrorMessage { get; set; }
    
-   private List<string?> DeleteErrorMessages { get; set; } = new();
+   private List<string?> DeleteErrorMessages { get; } = new();
 
    protected override async Task OnInitializedAsync()
    {
-      var response = await SubjectService.GetSubjects();
+      var response = await SubjectService.SimpleGetAsync();
 
       if (!response.IsSuccess)
       {
@@ -44,7 +44,7 @@ public partial class Subjects
    
    private async Task DeleteSubject(int id)
    {
-      var response = await SubjectService.DeleteSubject(id);
+      var response = await SubjectService.SimpleDeleteAsync(id);
       
       if (!response.IsSuccess)
       {

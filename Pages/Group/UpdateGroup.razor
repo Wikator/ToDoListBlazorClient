@@ -10,7 +10,7 @@
     }
     else
     {
-        <p>@GetErrorMessage</p>
+        <ErrorMessage Message="@GetErrorMessage" />
     }
 }
 else
@@ -23,6 +23,6 @@ else
         <DataAnnotationsValidator />
         <TextInputField @bind-Value="Group.Name" Label="Name" ValidationFor="@(() => Group.Name)"></TextInputField>
 
-        <button type="submit" class="btn btn-primary mt-2">Update</button>
+        <SubmitButton IsValid="@context.Validate()">Update</SubmitButton>
     </EditForm>
 }

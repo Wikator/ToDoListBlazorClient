@@ -23,12 +23,18 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
         var token = await _localStorage.GetItemAsync<string>("accessToken");
 
         if (token.IsNullOrEmpty())
+        {
+            await _localStorage.RemoveItemAsync("accessToken");
             return new AuthenticationState(user);
-
+        }
+        
         var decodedToken = _tokenHandler.ReadJwtToken(token);
         
         if (decodedToken.ValidTo < DateTime.Now)
+        {
+            await _localStorage.RemoveItemAsync("accessToken");
             return new AuthenticationState(user);
+        }
 
         var claims = decodedToken.Claims;
         user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));

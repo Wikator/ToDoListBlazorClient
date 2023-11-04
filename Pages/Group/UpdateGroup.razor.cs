@@ -25,7 +25,7 @@ public partial class UpdateGroup
         }
         else
         {
-            var response = await GroupService.GetGroup(Id.Value);
+            var response = await GroupService.SimpleGetAsync(Id.Value);
             
             if (!response.IsSuccess)
             {
@@ -42,7 +42,10 @@ public partial class UpdateGroup
 
     protected async Task HandleSubmit()
     {
-        var response = await GroupService.UpdateGroup(Id!.Value, Group!);
+        if (Id is null || Group is null)
+            return;
+        
+        var response = await GroupService.SimplePutAsync(Id.Value, Group);
         if (response.IsSuccess)
         {
             NavigationManager.NavigateTo("groups");

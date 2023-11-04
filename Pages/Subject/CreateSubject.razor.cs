@@ -18,7 +18,7 @@ public partial class CreateSubject
 
     private async Task HandleSubmit()
     {
-        var response = await SubjectService.CreateSubject(Subject);
+        var response = await SubjectService.SimplePostAsync(Subject);
 
         if (!response.IsSuccess)
         {

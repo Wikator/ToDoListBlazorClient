@@ -5,37 +5,12 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services;
 
-public class SubjectService : BaseHttpService, ISubjectService
+public sealed class SubjectService : SimpleHttpService<SubjectDto, CreateSubjectDto>, ISubjectService
 {
-    private const string BaseUrl = "subjects/";
-    
     public SubjectService(ILocalStorageService localStorage,
-        HttpClient http) : base(localStorage, http)
+        HttpClient httpClient) : base(localStorage, httpClient)
     {
     }
 
-    public async Task<Response<IEnumerable<SubjectDto>>> GetSubjects()
-    {
-        return await SimpleGetAsync<IEnumerable<SubjectDto>>(BaseUrl);
-    }
-
-    public async Task<Response<SubjectDto>> GetSubject(int id)
-    {
-        return await SimpleGetAsync<SubjectDto>(BaseUrl + id);
-    }
-
-    public async Task<Response<SubjectDto>> CreateSubject(CreateSubjectDto subject)
-    {
-        return await SimplePostAsync<SubjectDto, CreateSubjectDto>(subject, BaseUrl);
-    }
-
-    public async Task<Response<SubjectDto>> UpdateSubject(int id, CreateSubjectDto subject)
-    {
-        return await SimplePutAsync<SubjectDto, CreateSubjectDto>(subject, BaseUrl + id);
-    }
-
-    public async Task<Response> DeleteSubject(int id)
-    {
-        return await SimpleDeleteAsync(BaseUrl + id);
-    }
+    protected override string BaseUrl => "subjects/";
 }

@@ -5,12 +5,12 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services;
 
-public sealed class GroupService : SimpleHttpService<GroupDto, CreateGroupDto>, IGroupService
+public sealed class CategoryService : SimpleHttpService<CategoryDto, CreateCategoryDto>, ICategoryService
 {
-    public GroupService(ILocalStorageService localStorage,
+    public CategoryService(ILocalStorageService localStorage,
         HttpClient httpClient) : base(localStorage, httpClient)
     {
     }
 
-    protected override string BaseUrl => "groups/";
+    protected override string BaseUrl => "categories/";
 }
