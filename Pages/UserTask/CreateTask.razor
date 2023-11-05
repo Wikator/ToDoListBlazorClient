@@ -1,51 +1,49 @@
 ﻿@page "/tasks/create"
 
-<h3>CreateTask</h3>
+<h3>Create Task</h3>
 
-<form>
-    @if (GroupOptions is null)
-    {
-        <h4>Loading groups...</h4>
-    }
-    else
-    {
+@if (Options is null)
+{
+    <h4>Loading groups...</h4>
+    <ErrorMessage Message="@GetErrorMessage"/>
+}
+else
+{
+    <EditForm Model="CreateTaskDto" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ErrorMessage Message="@PostErrorMessage"/>
+        <TextInputField @bind-Value="@CreateTaskDto.Name" Label="Name" ValidationFor="@(() => CreateTaskDto.Name)" />
+        <TextInputField @bind-Value="@CreateTaskDto.Description" Label="Description" ValidationFor="@(() => CreateTaskDto.Description)" />
         <label for="groups">Choose group:</label>
-        <select name="groups" id="groups" class="form-select form-select-lg mb-3">
-            <option selected value="0">---Choose---</option>
-            @foreach (var option in GroupOptions)
+        <InputSelect @bind-Value="@CreateTaskDto.GroupId" name="groups" id="groups" class="form-select mb-3">
+            <option selected value="">---Choose---</option>
+            @foreach (var option in Options["Group"] ?? Enumerable.Empty<Option>())
             {
                 <option value="@option.Value">@option.Name</option>
             }
-        </select>
-    }
-    @if (SubjectOptions is null)
-    {
-        <h4>Loading subjects...</h4>
-    }
-    else
-    {
+        </InputSelect>
+        <ValidationMessage For="@(() => CreateTaskDto.GroupId)" />
+
         <label for="subjects">Choose subject:</label>
-        <select name="subjects" id="subjects" class="form-select form-select-lg mb-3">
-            <option selected value="0">---Choose---</option>
-            @foreach (var option in SubjectOptions)
+        <InputSelect @bind-Value="@CreateTaskDto.SubjectId" name="subjects" id="subjects" class="form-select mb-3">
+            <option selected value="">---Choose---</option>
+            @foreach (var option in Options["Subject"] ?? Enumerable.Empty<Option>())
             {
                 <option value="@option.Value">@option.Name</option>
             }
-        </select>
-    }
-    @if (CategoryOptions is null)
-    {
-        <h4>Loading categories...</h4>
-    }
-    else
-    {
+        </InputSelect>
+        <ValidationMessage For="@(() => CreateTaskDto.SubjectId)" />
+
         <label for="categories">Choose category:</label>
-        <select name="categories" id="categories" class="form-select form-select-lg mb-3">
-            <option selected value="0">---Choose---</option>
-            @foreach (var option in CategoryOptions)
+        <InputSelect @bind-Value="@CreateTaskDto.CategoryId" name="categories" id="categories" class="form-select mb-3">
+            <option selected value="">---Choose---</option>
+            @foreach (var option in Options["Categories"] ?? Enumerable.Empty<Option>())
             {
                 <option value="@option.Value">@option.Name</option>
             }
-        </select>
-    }
-</form>
+        </InputSelect>
+        <ValidationMessage For="@(() => CreateTaskDto.CategoryId)" />
+        
+        <SubmitButton>Create</SubmitButton>
+    </EditForm>
+}
