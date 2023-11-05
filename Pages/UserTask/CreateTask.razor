@@ -1,0 +1,51 @@
+﻿@page "/tasks/create"
+
+<h3>CreateTask</h3>
+
+<form>
+    @if (GroupOptions is null)
+    {
+        <h4>Loading groups...</h4>
+    }
+    else
+    {
+        <label for="groups">Choose group:</label>
+        <select name="groups" id="groups" class="form-select form-select-lg mb-3">
+            <option selected value="0">---Choose---</option>
+            @foreach (var option in GroupOptions)
+            {
+                <option value="@option.Value">@option.Name</option>
+            }
+        </select>
+    }
+    @if (SubjectOptions is null)
+    {
+        <h4>Loading subjects...</h4>
+    }
+    else
+    {
+        <label for="subjects">Choose subject:</label>
+        <select name="subjects" id="subjects" class="form-select form-select-lg mb-3">
+            <option selected value="0">---Choose---</option>
+            @foreach (var option in SubjectOptions)
+            {
+                <option value="@option.Value">@option.Name</option>
+            }
+        </select>
+    }
+    @if (CategoryOptions is null)
+    {
+        <h4>Loading categories...</h4>
+    }
+    else
+    {
+        <label for="categories">Choose category:</label>
+        <select name="categories" id="categories" class="form-select form-select-lg mb-3">
+            <option selected value="0">---Choose---</option>
+            @foreach (var option in CategoryOptions)
+            {
+                <option value="@option.Value">@option.Name</option>
+            }
+        </select>
+    }
+</form>

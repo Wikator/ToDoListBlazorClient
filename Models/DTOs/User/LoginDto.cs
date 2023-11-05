@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ToDoListBlazorClient.Models.DTOs;
+namespace ToDoListBlazorClient.Models.DTOs.User;
 
 public class LoginDto
 {

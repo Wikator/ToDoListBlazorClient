@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using ToDoListBlazorClient.Models.DTOs;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Components;
+using ToDoListBlazorClient.Models.DTOs.Group;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Group;
@@ -8,10 +9,10 @@ public partial class UpdateGroup
 {
     [Parameter] public int? Id { get; init; }
 
-    [Inject] public required IGroupService GroupService { get; init; }
+    [Inject] public required IGroupService GroupService { private get; init; }
+    [Inject] public required NavigationManager NavigationManager { private get; init; }
+    [Inject] public required IMapper Mapper { private get; init; }
 
-    [Inject] public required NavigationManager NavigationManager { get; init; }
-    
     private string? GetErrorMessage { get; set; }
     private string? PutErrorMessage { get; set; }
 
@@ -26,17 +27,11 @@ public partial class UpdateGroup
         else
         {
             var response = await GroupService.SimpleGetAsync(Id.Value);
-            
-            if (!response.IsSuccess)
-            {
-                GetErrorMessage = response.Message;
-                return;
-            }
 
-            Group = new CreateGroupDto
-            {
-                Name = response.Data!.Name
-            };
+            if (response.IsSuccess)
+                Group = Mapper.Map<CreateGroupDto>(response.Data);
+            else
+                GetErrorMessage = response.Message;
         }
     }
 
@@ -44,15 +39,11 @@ public partial class UpdateGroup
     {
         if (Id is null || Group is null)
             return;
-        
+
         var response = await GroupService.SimplePutAsync(Id.Value, Group);
         if (response.IsSuccess)
-        {
             NavigationManager.NavigateTo("groups");
-        }
         else
-        {
             PutErrorMessage = response.Message;
-        }
     }
 }

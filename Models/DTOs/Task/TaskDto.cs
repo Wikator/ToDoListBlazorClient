@@ -1,4 +1,8 @@
-﻿namespace ToDoListBlazorClient.Models.DTOs;
+﻿using ToDoListBlazorClient.Models.DTOs.Category;
+using ToDoListBlazorClient.Models.DTOs.Group;
+using ToDoListBlazorClient.Models.DTOs.Subject;
+
+namespace ToDoListBlazorClient.Models.DTOs.Task;
 
 public class TaskDto
 {

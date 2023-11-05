@@ -6,7 +6,7 @@ namespace ToDoListBlazorClient.Shared;
 
 public partial class TextInputField : InputBase<string>
 {
-    [Parameter, EditorRequired] public Expression<Func<string>> ValidationFor { get; set; } = default!;
+    [Parameter] [EditorRequired] public Expression<Func<string>> ValidationFor { get; set; } = default!;
     [Parameter] public string? Id { get; set; }
     [Parameter] public string? Label { get; set; }
 

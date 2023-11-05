@@ -1,58 +1,48 @@
 ﻿using Microsoft.AspNetCore.Components;
-using ToDoListBlazorClient.Models.DTOs;
+using ToDoListBlazorClient.Models.DTOs.Subject;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Subject;
 
 public partial class Subjects
-{ 
-   [Inject]
-   public required ISubjectService SubjectService { get; init; }
-   
-   [Inject]
-   public required NavigationManager NavigationManager { get; init; }
-    
-   private IEnumerable<SubjectDto>? SubjectList { get; set; }
-   
-   private string? GetErrorMessage { get; set; }
-   
-   private List<string?> DeleteErrorMessages { get; } = new();
+{
+    [Inject] public required ISubjectService SubjectService { get; init; }
 
-   protected override async Task OnInitializedAsync()
-   {
-      var response = await SubjectService.SimpleGetAsync();
+    [Inject] public required NavigationManager NavigationManager { get; init; }
 
-      if (!response.IsSuccess)
-      {
-         GetErrorMessage = response.Message;
-      }
-      else
-      {
-         SubjectList = response.Data;
-      }
-   }
+    private IEnumerable<SubjectDto>? SubjectList { get; set; }
 
-   private void NavigateToCreateSubject()
-   {
-      NavigationManager.NavigateTo("/subjects/create");
-   }
+    private string? GetErrorMessage { get; set; }
 
-   private void NavigateToUpdateSubject(int id)
-   {
-      NavigationManager.NavigateTo($"subjects/{id}");
-   }
-   
-   private async Task DeleteSubject(int id)
-   {
-      var response = await SubjectService.SimpleDeleteAsync(id);
-      
-      if (!response.IsSuccess)
-      {
-         DeleteErrorMessages.Add(response.Message);
-      }
-      else
-      {
-         SubjectList = SubjectList?.Where(s => s.Id != id);
-      }
-   }
+    private List<string?> DeleteErrorMessages { get; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await SubjectService.SimpleGetAsync();
+
+        if (!response.IsSuccess)
+            GetErrorMessage = response.Message;
+        else
+            SubjectList = response.Data;
+    }
+
+    private void NavigateToCreateSubject()
+    {
+        NavigationManager.NavigateTo("/subjects/create");
+    }
+
+    private void NavigateToUpdateSubject(int id)
+    {
+        NavigationManager.NavigateTo($"subjects/{id}");
+    }
+
+    private async Task DeleteSubject(int id)
+    {
+        var response = await SubjectService.SimpleDeleteAsync(id);
+
+        if (!response.IsSuccess)
+            DeleteErrorMessages.Add(response.Message);
+        else
+            SubjectList = SubjectList?.Where(s => s.Id != id);
+    }
 }

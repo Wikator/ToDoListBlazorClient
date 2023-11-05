@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using ToDoListBlazorClient.Extensions;
-using ToDoListBlazorClient.Models.DTOs;
+using ToDoListBlazorClient.Models.DTOs.User;
 using ToDoListBlazorClient.Providers;
 using ToDoListBlazorClient.Services.Base;
 using ToDoListBlazorClient.Services.Contracts;
@@ -12,9 +12,9 @@ namespace ToDoListBlazorClient.Services;
 
 public class AccountService : IAccountService
 {
+    private readonly ApiAuthenticationStateProvider _authStateProvider;
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
-    private readonly ApiAuthenticationStateProvider _authStateProvider;
 
     public AccountService(HttpClient httpClient, ILocalStorageService localStorage,
         AuthenticationStateProvider authStateProvider)
@@ -44,6 +44,17 @@ public class AccountService : IAccountService
         return await LoginOrRegister("users", body);
     }
 
+    public async Task<Response<UserDto>> ChangePasswordAsync(UserEditDto edit)
+    {
+        await _httpClient.AddJwtTokenAsync(_localStorage);
+        var response = await _httpClient.PutAsJsonAsync("users", edit);
+
+        if (!response.IsSuccessStatusCode)
+            return await Response<UserDto>.GenerateFailedResponseAsync(response.Content);
+
+        return await Response<UserDto>.GenerateSuccessfulResponseAsync(response.Content);
+    }
+
     public async Task<Response> LogoutAsync()
     {
         await _httpClient.AddJwtTokenAsync(_localStorage);
@@ -53,7 +64,7 @@ public class AccountService : IAccountService
         {
             if (response.StatusCode != HttpStatusCode.Unauthorized)
                 return await Response.GenerateFailedResponseAsync(response.Content);
-            
+
             await _authStateProvider.LoggedOut();
 
             return await Response.GenerateFailedResponseAsync(response.Content);
@@ -70,17 +81,17 @@ public class AccountService : IAccountService
 
         if (!response.IsSuccessStatusCode)
             return await Response<UserDto>.GenerateFailedResponseAsync(response.Content);
-        
+
         var token = response.Headers.GetValues("Authorization").FirstOrDefault();
-        
+
         if (token is null)
             return await Response<UserDto>.GenerateFailedResponseAsync(null);
-        
+
         var user = await Response<UserDto>.GenerateSuccessfulResponseAsync(response.Content);
 
         if (!user.IsSuccess)
             return user;
-        
+
         token = token.Split(' ')[1].TrimEnd('"');
         await _authStateProvider.LoggedIn(token);
         return user;

@@ -16,7 +16,7 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
         _localStorage = localStorage;
         _tokenHandler = new JwtSecurityTokenHandler();
     }
-    
+
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var user = new ClaimsPrincipal(new ClaimsIdentity());
@@ -27,9 +27,9 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
             await _localStorage.RemoveItemAsync("accessToken");
             return new AuthenticationState(user);
         }
-        
+
         var decodedToken = _tokenHandler.ReadJwtToken(token);
-        
+
         if (decodedToken.ValidTo < DateTime.Now)
         {
             await _localStorage.RemoveItemAsync("accessToken");

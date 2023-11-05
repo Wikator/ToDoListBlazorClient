@@ -1,4 +1,4 @@
-﻿namespace ToDoListBlazorClient.Models.DTOs;
+﻿namespace ToDoListBlazorClient.Models.DTOs.Category;
 
 public class CreateCategoryDto
 {

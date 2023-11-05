@@ -2,7 +2,7 @@
 <h3>CreateSubject</h3>
 
 <EditForm Model="Subject" OnSubmit="HandleSubmit">
-    <ErrorMessage Message="@ErrorMessage" />
+    <ErrorMessage Message="@ErrorMessage"/>
     <DataAnnotationsValidator/>
     <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)"/>
 

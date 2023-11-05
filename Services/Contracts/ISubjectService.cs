@@ -1,5 +1,4 @@
-﻿using ToDoListBlazorClient.Models.DTOs;
-using ToDoListBlazorClient.Services.Base;
+﻿using ToDoListBlazorClient.Models.DTOs.Subject;
 
 namespace ToDoListBlazorClient.Services.Contracts;
 

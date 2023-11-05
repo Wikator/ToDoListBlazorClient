@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using ToDoListBlazorClient.Models.DTOs;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Components;
+using ToDoListBlazorClient.Models.DTOs.Subject;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Subject;
@@ -7,12 +8,14 @@ namespace ToDoListBlazorClient.Pages.Subject;
 public partial class UpdateSubject
 {
     [Parameter] public int? Id { get; set; }
-    [Inject] public required ISubjectService SubjectService { get; set; }
-    [Inject] public required NavigationManager NavigationManager { get; set; }
-    
+
+    [Inject] public required ISubjectService SubjectService { private get; init; }
+    [Inject] public required NavigationManager NavigationManager { private get; init; }
+    [Inject] public required IMapper Mapper { private get; init; }
+
     private string? GetErrorMessage { get; set; }
     private string? PutErrorMessage { get; set; }
-    
+
     private CreateSubjectDto? Subject { get; set; }
 
     protected override async Task OnParametersSetAsync()
@@ -24,18 +27,11 @@ public partial class UpdateSubject
         else
         {
             var response = await SubjectService.SimpleGetAsync(Id.Value);
-            
-            if (!response.IsSuccess)
-            {
-                GetErrorMessage = response.Message;
-            }
+
+            if (response.IsSuccess)
+                Subject = Mapper.Map<CreateSubjectDto>(response.Data);
             else
-            {
-                Subject = new CreateSubjectDto
-                {
-                    Name = response.Data!.Name
-                };
-            }
+                GetErrorMessage = response.Message;
         }
     }
 
@@ -43,16 +39,12 @@ public partial class UpdateSubject
     {
         if (Subject is null || Id is null)
             return;
-        
+
         var response = await SubjectService.SimplePutAsync(Id.Value, Subject);
-        
+
         if (!response.IsSuccess)
-        {
             PutErrorMessage = response.Message;
-        }
         else
-        {
             NavigationManager.NavigateTo("/subjects");
-        }
     }
 }

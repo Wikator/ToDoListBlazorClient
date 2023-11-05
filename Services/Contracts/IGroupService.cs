@@ -1,4 +1,4 @@
-﻿using ToDoListBlazorClient.Models.DTOs;
+﻿using ToDoListBlazorClient.Models.DTOs.Group;
 
 namespace ToDoListBlazorClient.Services.Contracts;
 

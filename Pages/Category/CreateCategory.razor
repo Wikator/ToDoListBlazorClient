@@ -3,10 +3,10 @@
 <h3>CreateCategory</h3>
 
 <EditForm Model="Category" OnValidSubmit="HandleSubmit">
-    <DataAnnotationsValidator />
-    <ErrorMessage Message="@ErrorMessage" />
-    
-    <TextInputField @bind-Value="Category.Name" Label="Name"  ValidationFor="@(() => Category.Name)" />
-    
+    <DataAnnotationsValidator/>
+    <ErrorMessage Message="@ErrorMessage"/>
+
+    <TextInputField @bind-Value="Category.Name" Label="Name" ValidationFor="@(() => Category.Name)"/>
+
     <SubmitButton IsValid="@context.Validate()">Create</SubmitButton>
 </EditForm>

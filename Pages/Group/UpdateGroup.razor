@@ -10,17 +10,17 @@
     }
     else
     {
-        <ErrorMessage Message="@GetErrorMessage" />
+        <ErrorMessage Message="@GetErrorMessage"/>
     }
 }
 else
 {
     @if (PutErrorMessage is not null)
     {
-        <ErrorMessage Message="@PutErrorMessage" />
+        <ErrorMessage Message="@PutErrorMessage"/>
     }
     <EditForm Model="Group" OnSubmit="HandleSubmit">
-        <DataAnnotationsValidator />
+        <DataAnnotationsValidator/>
         <TextInputField @bind-Value="Group.Name" Label="Name" ValidationFor="@(() => Group.Name)"></TextInputField>
 
         <SubmitButton IsValid="@context.Validate()">Update</SubmitButton>

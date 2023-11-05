@@ -7,7 +7,6 @@ namespace ToDoListBlazorClient.Services.Base;
 
 public abstract class SimpleHttpService<TResponse, TBody> : ISimpleHttpService<TResponse, TBody>
 {
-    protected abstract string BaseUrl { get; }
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
 
@@ -17,39 +16,41 @@ public abstract class SimpleHttpService<TResponse, TBody> : ISimpleHttpService<T
         _localStorage = localStorage;
         _httpClient = httpClient;
     }
-    
+
+    protected abstract string BaseUrl { get; }
+
     public async Task<Response<IEnumerable<TResponse>>> SimpleGetAsync()
     {
         await _httpClient.AddJwtTokenAsync(_localStorage);
         var response = await _httpClient.GetAsync(BaseUrl);
-        
+
         return await GenerateResponseAsync<IEnumerable<TResponse>>(response);
     }
-    
+
     public async Task<Response<TResponse>> SimpleGetAsync(int id)
     {
         await _httpClient.AddJwtTokenAsync(_localStorage);
         var response = await _httpClient.GetAsync(BaseUrl + id);
-        
+
         return await GenerateResponseAsync<TResponse>(response);
     }
-    
+
     public async Task<Response<TResponse>> SimplePostAsync(TBody body)
     {
         await _httpClient.AddJwtTokenAsync(_localStorage);
         var response = await _httpClient.PostAsJsonAsync(BaseUrl, body);
-        
+
         return await GenerateResponseAsync<TResponse>(response);
     }
-    
+
     public async Task<Response<TResponse>> SimplePutAsync(int id, TBody body)
     {
         await _httpClient.AddJwtTokenAsync(_localStorage);
         var response = await _httpClient.PutAsJsonAsync(BaseUrl + id, body);
-        
+
         return await GenerateResponseAsync<TResponse>(response);
     }
-    
+
     public async Task<Response> SimpleDeleteAsync(int id)
     {
         await _httpClient.AddJwtTokenAsync(_localStorage);
@@ -65,7 +66,7 @@ public abstract class SimpleHttpService<TResponse, TBody> : ISimpleHttpService<T
 
         return await Response<T>.GenerateSuccessfulResponseAsync(response.Content);
     }
-    
+
     private static async Task<Response> GenerateResponseAsync(HttpResponseMessage response)
     {
         if (!response.IsSuccessStatusCode)

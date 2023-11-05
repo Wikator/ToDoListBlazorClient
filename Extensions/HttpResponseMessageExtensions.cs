@@ -10,6 +10,6 @@ public static class HttpResponseMessageExtensions
             throw new Exception(await response.Content.ReadAsStringAsync());
 
         return await response.Content.ReadFromJsonAsync<T>()
-            ?? throw new Exception("Error parsing json");
+               ?? throw new Exception("Error parsing json");
     }
 }

@@ -13,11 +13,11 @@
 }
 
 <EditForm Model="register" OnValidSubmit="Submit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <TextInputField @bind-Value="register.Email" Type="email" Label="Email" ValidationFor="@(() => register.Email)" />
-    <TextInputField @bind-Value="register.Password" Type="password" Label="Password" ValidationFor="@(() => register.Password)" />
-        
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <TextInputField @bind-Value="register.Email" Type="email" Label="Email" ValidationFor="@(() => register.Email)"/>
+    <TextInputField @bind-Value="register.Password" Type="password" Label="Password" ValidationFor="@(() => register.Password)"/>
+
     <button type="submit" class="btn btn-primary mt-2" disabled="@(!context.Validate())">Create</button>
 </EditForm>
 
@@ -39,4 +39,5 @@
             NavigationManager.NavigateTo("/");
         }
     }
+
 }

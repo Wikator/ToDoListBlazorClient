@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ToDoListBlazorClient.Models.DTOs;
+namespace ToDoListBlazorClient.Models.DTOs.Subject;
 
 public class CreateSubjectDto
 {

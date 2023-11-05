@@ -12,15 +12,15 @@
 @if (SubjectList is null)
 {
     <h2>Loading...</h2>
-    <ErrorMessage Message="@GetErrorMessage" />
+    <ErrorMessage Message="@GetErrorMessage"/>
 }
 else
 {
     foreach (var errorMessage in DeleteErrorMessages)
     {
-        <ErrorMessage Message="@errorMessage" />
+        <ErrorMessage Message="@errorMessage"/>
     }
-    
+
     <div class="table-responsive">
         <table class="table table-striped table-bordered" style="width:100%">
             <thead>

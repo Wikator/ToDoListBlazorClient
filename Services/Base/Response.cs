@@ -7,12 +7,12 @@ public class Response<T>
     public string? Message { get; set; }
     public bool IsSuccess { get; set; } = true;
     public T? Data { get; set; }
-    
+
     public static async Task<Response<T>> GenerateSuccessfulResponseAsync(HttpContent? content)
     {
         if (content is null)
             return await GenerateFailedResponseAsync(content);
-        
+
         var payload = await content.ReadFromJsonAsync<T>();
 
         if (payload is null)
@@ -23,7 +23,7 @@ public class Response<T>
             Data = payload
         };
     }
-    
+
     public static async Task<Response<T>> GenerateFailedResponseAsync(HttpContent? httpContent)
     {
         return new Response<T>
@@ -40,7 +40,7 @@ public class Response
 {
     public string? Message { get; set; }
     public bool IsSuccess { get; set; } = true;
-    
+
     public static async Task<Response> GenerateFailedResponseAsync(HttpContent? httpContent)
     {
         return new Response

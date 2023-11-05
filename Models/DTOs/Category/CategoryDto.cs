@@ -1,6 +1,6 @@
-﻿namespace ToDoListBlazorClient.Models.DTOs;
+﻿namespace ToDoListBlazorClient.Models.DTOs.Category;
 
-public class SubjectDto
+public class CategoryDto
 {
     public int Id { get; set; }
     public required string Name { get; set; }
