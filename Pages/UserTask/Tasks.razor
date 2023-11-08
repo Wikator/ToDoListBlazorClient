@@ -46,7 +46,7 @@ else
                     <td>@(task.Group?.Name ?? "None")</td>
                     <td style="width:6%">
                         <button class="btn btn-info" @onclick="() => NavigateToEditTask(task.Id)">Update</button>
-                        @* <button class="btn btn-danger" @onclick="() => DeleteGroup(task.Id)">Delete</button> *@
+                        <button class="btn btn-danger" @onclick="() => DeleteTask(task.Id)">Delete</button>
                     </td>
                 </tr>
             }

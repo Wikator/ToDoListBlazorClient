@@ -15,7 +15,7 @@ public partial class Subjects
 
     private string? GetErrorMessage { get; set; }
 
-    private List<string?> DeleteErrorMessages { get; } = new();
+    private List<string> DeleteErrorMessages { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -48,7 +48,8 @@ public partial class Subjects
 
         if (!response.IsSuccess)
         {
-            DeleteErrorMessages.Add(response.Message);
+            DeleteErrorMessages.Add(response.Message
+                ?? "Something went wrong when deleting subject");
         }
         else
         {

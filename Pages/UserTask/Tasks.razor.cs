@@ -13,7 +13,7 @@ public partial class Tasks
     private IEnumerable<TaskDto>? TaskList { get; set; }
 
     private string? GetErrorMessage { get; set; }
-    private List<string?> DeleteErrorMessages { get; } = new();
+    private List<string> DeleteErrorMessages { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,5 +38,19 @@ public partial class Tasks
     private void NavigateToEditTask(int id)
     {
         NavigationManager.NavigateTo($"tasks/{id}");
+    }
+
+    private async Task DeleteTask(int id)
+    {
+        var response = await TaskService.SimpleDeleteAsync(id);
+
+        if (response.IsSuccess)
+        {
+            TaskList = TaskList?.Where(t => t.Id != id);
+        }
+        else
+        {
+            DeleteErrorMessages.Add(response.Message ?? "Something went wrong when deleting data");
+        }
     }
 }
