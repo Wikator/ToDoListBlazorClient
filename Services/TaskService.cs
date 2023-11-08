@@ -12,5 +12,5 @@ public class TaskService : SimpleHttpService<TaskDto, CreateTaskDto>, ITaskServi
     {
     }
 
-    protected override string BaseUrl { get; } = "tasks/";
+    protected override string BaseUrl => "tasks/";
 }

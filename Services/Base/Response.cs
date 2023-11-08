@@ -4,9 +4,9 @@ namespace ToDoListBlazorClient.Services.Base;
 
 public class Response<T>
 {
-    public string? Message { get; set; }
-    public bool IsSuccess { get; set; } = true;
-    public T? Data { get; set; }
+    public string? Message { get; private init; }
+    public bool IsSuccess { get; private init; } = true;
+    public T? Data { get; private init; }
 
     public static async Task<Response<T>> GenerateSuccessfulResponseAsync(HttpContent? content)
     {
@@ -38,8 +38,8 @@ public class Response<T>
 
 public class Response
 {
-    public string? Message { get; set; }
-    public bool IsSuccess { get; set; } = true;
+    public string? Message { get; private init; }
+    public bool IsSuccess { get; private init; } = true;
 
     public static async Task<Response> GenerateFailedResponseAsync(HttpContent? httpContent)
     {
