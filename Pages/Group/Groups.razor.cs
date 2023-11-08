@@ -15,16 +15,21 @@ public partial class Groups
 
 
     private string? GetErrorMessage { get; set; }
-    private List<string?> DeleteErrorMessages { get; } = new();
+    private List<string> DeleteErrorMessages { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         var response = await GroupService.SimpleGetAsync();
 
-        if (!response.IsSuccess)
-            GetErrorMessage = response.Message;
+        if (response.Data is null)
+        {
+            GetErrorMessage = response.Message
+                ?? "Something went wrong when fetching data";  
+        }
         else
+        {
             GroupList = response.Data;
+        }
     }
 
     private void NavigateToCreateGroup()
@@ -42,8 +47,13 @@ public partial class Groups
         var response = await GroupService.SimpleDeleteAsync(groupId);
 
         if (!response.IsSuccess)
-            DeleteErrorMessages.Add(response.Message);
+        {
+            DeleteErrorMessages.Add(response.Message
+                ?? "Something went wrong when deleting");
+        }
         else
+        {
             GroupList = GroupList?.Where(g => g.Id != groupId);
+        }
     }
 }

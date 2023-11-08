@@ -10,14 +10,14 @@
     }
     else
     {
-        <ErrorMessage Message="@GetErrorMessage"/>
+        <ErrorMessage Message="@GetErrorMessage" />
     }
 }
 else
 {
     <EditForm Model="Subject" OnValidSubmit="HandleSubmit">
         <DataAnnotationsValidator/>
-        <ErrorMessage Message="@PutErrorMessage"/>
+        <ErrorMessage>@PutErrorMessage</ErrorMessage>
         <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)"/>
 
         <SubmitButton IsValid="@context.Validate()">Update</SubmitButton>

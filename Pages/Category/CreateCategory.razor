@@ -4,7 +4,7 @@
 
 <EditForm Model="Category" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator/>
-    <ErrorMessage Message="@ErrorMessage"/>
+    <ErrorMessage Message="@ErrorMessage" />
 
     <TextInputField @bind-Value="Category.Name" Label="Name" ValidationFor="@(() => Category.Name)"/>
 

@@ -20,9 +20,14 @@ public partial class Tasks
         var response = await TaskService.SimpleGetAsync();
 
         if (response.IsSuccess)
+        {
             TaskList = response.Data;
+        }
         else
-            GetErrorMessage = response.Message;
+        {
+            GetErrorMessage = response.Message
+                ?? "Something went wrong when fetching data";
+        }
     }
 
     private void NavigateToCreateTask()

@@ -9,7 +9,7 @@
 }
 else
 {
-    <ErrorMessage Message="@ErrorMessage"/>
+    <ErrorMessage Message="@ErrorMessage" />
 }
 
 @code {
@@ -25,7 +25,8 @@ else
         }
         else
         {
-            ErrorMessage = response.Message;
+            ErrorMessage = response.Message
+                ?? "Something went wrong";
         }
     }
 

@@ -18,7 +18,7 @@ public partial class UpdateTask
     [Inject] public required NavigationManager NavigationManager { get; init; }
     [Inject] public required IMapper Mapper { get; init; }
 
-    private Dictionary<string, IEnumerable<Option>?>? Options { get; set; }
+    private Dictionary<string, IEnumerable<Option>>? Options { get; set; }
     private CreateTaskDto? Model { get; set; }
     
     private string? GetErrorMessage { get; set; }
@@ -38,35 +38,17 @@ public partial class UpdateTask
         var subjectsResponse = subjectsTask.Result;
         var categoriesResponse = categoriesTask.Result;
         
-        if (!groupsResponse.IsSuccess || !subjectsResponse.IsSuccess || !categoriesResponse.IsSuccess)
+        if (groupsResponse.Data is null || subjectsResponse.Data is null || categoriesResponse.Data is null)
         {
             GetErrorMessage = "Failed to load data. Please try again later.";
             return;
         }
 
-        var groups = groupsResponse.Data?.Select(g => new Option
+        Options = new Dictionary<string, IEnumerable<Option>>
         {
-            Name = g.Name,
-            Value = g.Id
-        });
-
-        var subjects = subjectsResponse.Data?.Select(s => new Option
-        {
-            Name = s.Name,
-            Value = s.Id
-        });
-
-        var categories = categoriesResponse.Data?.Select(c => new Option
-        {
-            Name = c.Name,
-            Value = c.Id
-        });
-
-        Options = new Dictionary<string, IEnumerable<Option>?>
-        {
-            { "Group", groups },
-            { "Subject", subjects },
-            { "Categories", categories }
+            { "Group", Mapper.Map<IEnumerable<Option>>(groupsResponse.Data) },
+            { "Subject", Mapper.Map<IEnumerable<Option>>(subjectsResponse.Data) },
+            { "Categories", Mapper.Map<IEnumerable<Option>>(categoriesResponse.Data) }
         };
     }
 
@@ -80,9 +62,9 @@ public partial class UpdateTask
         {
             var response = await TaskService.SimpleGetAsync(Id.Value);
 
-            if (!response.IsSuccess || response.Data is null)
+            if (response.Data is null)
             {
-                FetchErrorMessage = response.Message ?? "Something went wrong fetching data";
+                FetchErrorMessage = response.Message ??"Something went wrong fetching data";
             }
             else
             {

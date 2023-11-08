@@ -4,6 +4,7 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Subject;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public partial class Subjects
 {
     [Inject] public required ISubjectService SubjectService { get; init; }
@@ -20,10 +21,15 @@ public partial class Subjects
     {
         var response = await SubjectService.SimpleGetAsync();
 
-        if (!response.IsSuccess)
-            GetErrorMessage = response.Message;
+        if (response.Data is null)
+        {
+            GetErrorMessage = response.Message
+                ?? "Something went wrong when fetching data";
+        }
         else
+        {
             SubjectList = response.Data;
+        }
     }
 
     private void NavigateToCreateSubject()
@@ -41,8 +47,12 @@ public partial class Subjects
         var response = await SubjectService.SimpleDeleteAsync(id);
 
         if (!response.IsSuccess)
+        {
             DeleteErrorMessages.Add(response.Message);
+        }
         else
+        {
             SubjectList = SubjectList?.Where(s => s.Id != id);
+        }
     }
 }

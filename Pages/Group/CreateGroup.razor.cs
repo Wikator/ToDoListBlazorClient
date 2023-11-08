@@ -20,8 +20,13 @@ public partial class CreateGroup
         var response = await GroupService.SimplePostAsync(Group);
 
         if (response.IsSuccess)
+        {
             NavigationManager.NavigateTo("/groups");
+        }
         else
-            ErrorMessage = response.Message;
+        {
+            ErrorMessage = response.Message
+                ?? "Something went wrong when creating";
+        }
     }
 }

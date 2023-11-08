@@ -1,36 +1,30 @@
 ﻿@page "/Login"
-@using Microsoft.IdentityModel.Tokens
 @inject IAccountService AccountService;
 @inject NavigationManager NavigationManager;
 <h3>Login</h3>
 
-@if (!Error.IsNullOrEmpty())
-{
-    <div class="alert alert-warning">
-        @Error
-    </div>
-}
+<ErrorMessage Message="@Error" />
 
 <form @onsubmit="Submit">
     <div class="form-group mb-3">
         <label for="exampleInputEmail1">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" @bind="login.Email">
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" @bind="LoginDto.Email">
     </div>
     <div class="form-group mb-3">
         <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password" @bind="login.Password">
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password" @bind="LoginDto.Password">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 
 @code {
-    private readonly LoginDto login = new();
+    private LoginDto LoginDto { get; } = new();
     private string? Error { get; set; }
 
     private async Task Submit()
     {
-        var response = await AccountService.SignInAsync(login);
+        var response = await AccountService.SignInAsync(LoginDto);
         Console.WriteLine(response.Message);
 
         if (response.IsSuccess)
@@ -39,7 +33,8 @@
         }
         else
         {
-            Error = response.Message;
+            Error = response.Message
+             ?? "Something went wrong";
         }
     }
 

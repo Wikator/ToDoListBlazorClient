@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models;
 using ToDoListBlazorClient.Models.DTOs.Task;
 using ToDoListBlazorClient.Services.Contracts;
@@ -13,11 +14,12 @@ public partial class CreateTask
     [Inject] public required ICategoryService CategoryService { private get; init; }
     [Inject] public required ITaskService TaskService { private get; init; }
     [Inject] public required NavigationManager NavigationManager { private get; init; }
+    [Inject] public required IMapper Mapper { private get; init; }
     
     private string? GetErrorMessage { get; set; }
     private string? PostErrorMessage { get; set; }
 
-    private Dictionary<string, IEnumerable<Option>?>? Options { get; set; }
+    private Dictionary<string, IEnumerable<Option>>? Options { get; set; }
     
     private CreateTaskDto CreateTaskDto { get; } = new();
 
@@ -33,35 +35,17 @@ public partial class CreateTask
         var subjectsResponse = subjectsTask.Result;
         var categoriesResponse = categoriesTask.Result;
         
-        if (!groupsResponse.IsSuccess || !subjectsResponse.IsSuccess || !categoriesResponse.IsSuccess)
+        if (groupsResponse.Data is null || subjectsResponse.Data is null || categoriesResponse.Data is null)
         {
             GetErrorMessage = "Failed to load data. Please try again later.";
             return;
         }
 
-        var groups = groupsResponse.Data?.Select(g => new Option
+        Options = new Dictionary<string, IEnumerable<Option>>
         {
-            Name = g.Name,
-            Value = g.Id
-        });
-
-        var subjects = subjectsResponse.Data?.Select(s => new Option
-        {
-            Name = s.Name,
-            Value = s.Id
-        });
-
-        var categories = categoriesResponse.Data?.Select(c => new Option
-        {
-            Name = c.Name,
-            Value = c.Id
-        });
-
-        Options = new Dictionary<string, IEnumerable<Option>?>
-        {
-            { "Group", groups },
-            { "Subject", subjects },
-            { "Categories", categories }
+            { "Group", Mapper.Map<IEnumerable<Option>>(groupsResponse.Data) },
+            { "Subject", Mapper.Map<IEnumerable<Option>>(subjectsResponse.Data) },
+            { "Categories", Mapper.Map<IEnumerable<Option>>(categoriesResponse.Data) }
         };
     }
     
@@ -70,7 +54,8 @@ public partial class CreateTask
         var response = await TaskService.SimplePostAsync(CreateTaskDto);
         if (!response.IsSuccess)
         {
-            PostErrorMessage = response.Message;
+            PostErrorMessage = response.Message
+                ?? "Something went wrong when updating";
         }
         else
         {

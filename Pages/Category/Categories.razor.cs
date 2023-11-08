@@ -4,6 +4,7 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Category;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public partial class Categories
 {
     [Inject] public required ICategoryService CategoryService { get; init; }
@@ -14,16 +15,21 @@ public partial class Categories
 
     private string? GetErrorMessage { get; set; }
 
-    private List<string?> DeleteErrorMessages { get; } = new();
+    private List<string> DeleteErrorMessages { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         var response = await CategoryService.SimpleGetAsync();
 
-        if (!response.IsSuccess)
-            GetErrorMessage = response.Message;
+        if (response.Data is null)
+        {
+            GetErrorMessage = response.Message
+                ?? "Something went wrong when fetching data";
+        }
         else
+        {
             CategoryList = response.Data;
+        }
     }
 
     private void NavigateToCreateCategory()
@@ -41,8 +47,13 @@ public partial class Categories
         var response = await CategoryService.SimpleDeleteAsync(id);
 
         if (!response.IsSuccess)
-            DeleteErrorMessages.Add(response.Message);
+        {
+            DeleteErrorMessages.Add(response.Message
+                ?? "Something went wrong when deleting");
+        }
         else
+        {
             CategoryList = CategoryList?.Where(s => s.Id != id);
+        }
     }
 }

@@ -1,38 +1,33 @@
 ﻿@page "/Register"
-@using Microsoft.IdentityModel.Tokens
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
 
 <h3>Register</h3>
 
-@if (!Error.IsNullOrEmpty())
-{
-    <div class="alert alert-warning">
-        @Error
-    </div>
-}
+<ErrorMessage Message="@Error" />
 
-<EditForm Model="register" OnValidSubmit="Submit">
+<EditForm Model="RegisterDto" OnValidSubmit="Submit">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
-    <TextInputField @bind-Value="register.Email" Type="email" Label="Email" ValidationFor="@(() => register.Email)"/>
-    <TextInputField @bind-Value="register.Password" Type="password" Label="Password" ValidationFor="@(() => register.Password)"/>
+    <TextInputField @bind-Value="RegisterDto.Email" Type="email" Label="Email" ValidationFor="@(() => RegisterDto.Email)"/>
+    <TextInputField @bind-Value="RegisterDto.Password" Type="password" Label="Password" ValidationFor="@(() => RegisterDto.Password)"/>
 
     <button type="submit" class="btn btn-primary mt-2" disabled="@(!context.Validate())">Create</button>
 </EditForm>
 
 
 @code {
-    private readonly RegisterDto register = new();
+    private RegisterDto RegisterDto { get; } = new();
     private string? Error { get; set; }
 
     private async Task Submit()
     {
-        var response = await AccountService.RegisterAsync(register);
+        var response = await AccountService.RegisterAsync(RegisterDto);
 
         if (!response.IsSuccess)
         {
-            Error = response.Message;
+            Error = response.Message
+                ?? "Something went wrong";
         }
         else
         {

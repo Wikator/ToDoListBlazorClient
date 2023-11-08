@@ -28,10 +28,15 @@ public partial class UpdateGroup
         {
             var response = await GroupService.SimpleGetAsync(Id.Value);
 
-            if (response.IsSuccess)
+            if (response.Data is null)
+            {
                 Group = Mapper.Map<CreateGroupDto>(response.Data);
+            }
             else
-                GetErrorMessage = response.Message;
+            {
+                GetErrorMessage = response.Message
+                    ?? "Something went wrong when fetching data";
+            }
         }
     }
 
@@ -42,8 +47,13 @@ public partial class UpdateGroup
 
         var response = await GroupService.SimplePutAsync(Id.Value, Group);
         if (response.IsSuccess)
+        {
             NavigationManager.NavigateTo("groups");
+        }
         else
-            PutErrorMessage = response.Message;
+        {
+            PutErrorMessage = response.Message
+                ?? "Something went wrong when updating";
+        }
     }
 }

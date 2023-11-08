@@ -20,8 +20,12 @@ public partial class CreateSubject
         var response = await SubjectService.SimplePostAsync(Subject);
 
         if (!response.IsSuccess)
+        {
             ErrorMessage = response.Message;
+        }
         else
+        {
             NavigationManager.NavigateTo("/subjects");
+        }
     }
 }

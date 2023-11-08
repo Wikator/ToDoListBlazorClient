@@ -3,7 +3,7 @@
 <h3>Create Group</h3>
 
 <EditForm Model="Group" OnValidSubmit="HandleSubmit">
-    <ErrorMessage Message="@ErrorMessage"></ErrorMessage>
+    <ErrorMessage Message="@ErrorMessage" />
     <DataAnnotationsValidator/>
     <TextInputField @bind-Value="Group.Name" Label="Name" ValidationFor="@(() => Group.Name)"/>
 

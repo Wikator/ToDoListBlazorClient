@@ -4,6 +4,7 @@ using ToDoListBlazorClient.Models.DTOs.Subject;
 
 namespace ToDoListBlazorClient.Models.DTOs.Task;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class TaskDto
 {
     public int Id { get; set; }

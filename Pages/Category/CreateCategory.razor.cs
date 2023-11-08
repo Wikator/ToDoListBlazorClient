@@ -4,6 +4,7 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Category;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public partial class CreateCategory
 {
     [Inject] public required ICategoryService CategoryService { private get; init; }
@@ -18,8 +19,13 @@ public partial class CreateCategory
         var response = await CategoryService.SimplePostAsync(Category);
 
         if (response.IsSuccess)
+        {
             NavigationManager.NavigateTo("/categories");
+        }
         else
-            ErrorMessage = response.Message;
+        {
+            ErrorMessage = response.Message
+                ?? "Something went wrong when creating";
+        }
     }
 }
