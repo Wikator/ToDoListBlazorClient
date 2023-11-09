@@ -64,7 +64,7 @@ public partial class UpdateTask
 
             if (response.Data is null)
             {
-                FetchErrorMessage = response.Message ??"Something went wrong fetching data";
+                FetchErrorMessage = response.Message;
             }
             else
             {
@@ -86,7 +86,7 @@ public partial class UpdateTask
         }
         else
         {
-            UpdateErrorMessage = response.Message ?? "Something went wrong when updating. Try again later";
+            UpdateErrorMessage = response.Message;
         }
     }
 }

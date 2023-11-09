@@ -23,8 +23,7 @@ public partial class Subjects
 
         if (response.Data is null)
         {
-            GetErrorMessage = response.Message
-                ?? "Something went wrong when fetching data";
+            GetErrorMessage = response.Message;
         }
         else
         {
@@ -48,8 +47,7 @@ public partial class Subjects
 
         if (!response.IsSuccess)
         {
-            DeleteErrorMessages.Add(response.Message
-                ?? "Something went wrong when deleting subject");
+            DeleteErrorMessages.Add(response.Message);
         }
         else
         {

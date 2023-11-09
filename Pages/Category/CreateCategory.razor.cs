@@ -24,8 +24,7 @@ public partial class CreateCategory
         }
         else
         {
-            ErrorMessage = response.Message
-                ?? "Something went wrong when creating";
+            ErrorMessage = response.Message;
         }
     }
 }

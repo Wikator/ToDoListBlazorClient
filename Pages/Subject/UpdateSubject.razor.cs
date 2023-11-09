@@ -29,9 +29,13 @@ public partial class UpdateSubject
             var response = await SubjectService.SimpleGetAsync(Id.Value);
 
             if (response.IsSuccess)
+            {
                 Subject = Mapper.Map<CreateSubjectDto>(response.Data);
+            }
             else
+            {
                 GetErrorMessage = response.Message;
+            }
         }
     }
 
@@ -43,8 +47,12 @@ public partial class UpdateSubject
         var response = await SubjectService.SimplePutAsync(Id.Value, Subject);
 
         if (!response.IsSuccess)
+        {
             PutErrorMessage = response.Message;
+        }
         else
+        {
             NavigationManager.NavigateTo("/subjects");
+        }
     }
 }

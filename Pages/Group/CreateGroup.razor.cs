@@ -25,8 +25,7 @@ public partial class CreateGroup
         }
         else
         {
-            ErrorMessage = response.Message
-                ?? "Something went wrong when creating";
+            ErrorMessage = response.Message;
         }
     }
 }

@@ -4,15 +4,12 @@ namespace ToDoListBlazorClient.Services.Base;
 
 public class Response<T>
 {
-    public string? Message { get; private init; }
-    public bool IsSuccess { get; private init; } = true;
+    public required string Message { get; init; }
+    public required bool IsSuccess { get; init; }
     public T? Data { get; private init; }
 
-    public static async Task<Response<T>> GenerateSuccessfulResponseAsync(HttpContent? content)
+    public static async Task<Response<T>> GenerateSuccessfulResponseAsync(HttpContent content)
     {
-        if (content is null)
-            return await GenerateFailedResponseAsync(content);
-
         var payload = await content.ReadFromJsonAsync<T>();
 
         if (payload is null)
@@ -20,35 +17,50 @@ public class Response<T>
 
         return new Response<T>
         {
-            Data = payload
+            IsSuccess = true,
+            Data = payload,
+            Message = "Operation completed successfully."
         };
     }
 
-    public static async Task<Response<T>> GenerateFailedResponseAsync(HttpContent? httpContent)
+    public static async Task<Response<T>> GenerateFailedResponseAsync(HttpContent httpContent)
     {
+        var message = await httpContent.ReadAsStringAsync();
+        
         return new Response<T>
         {
             IsSuccess = false,
-            Message = httpContent is null
-                ? "Something went wrong"
-                : await httpContent.ReadAsStringAsync()
+            Message = string.IsNullOrEmpty(message) ?
+                "Something went wrong. Please try again later." :
+                message
         };
     }
 }
 
 public class Response
 {
-    public string? Message { get; private init; }
-    public bool IsSuccess { get; private init; } = true;
+    public required string Message { get; init; }
+    public required bool IsSuccess { get; init; }
 
-    public static async Task<Response> GenerateFailedResponseAsync(HttpContent? httpContent)
+    public static Response GenerateSuccessfulResponse()
     {
         return new Response
         {
             IsSuccess = false,
-            Message = httpContent is null
-                ? "Something went wrong"
-                : await httpContent.ReadAsStringAsync()
+            Message = "Operation completed successfully."
+        };
+    }
+    
+    public static async Task<Response> GenerateFailedResponseAsync(HttpContent httpContent)
+    {
+        var message = await httpContent.ReadAsStringAsync();
+        
+        return new Response
+        {
+            IsSuccess = false,
+            Message = string.IsNullOrEmpty(message) ?
+                "Something went wrong. Please try again later." :
+                message
         };
     }
 }

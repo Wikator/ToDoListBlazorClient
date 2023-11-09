@@ -69,7 +69,7 @@ public abstract class SimpleHttpService<TResponse, TBody> : ISimpleHttpService<T
         if (!response.IsSuccessStatusCode)
             return await Response.GenerateFailedResponseAsync(response.Content);
 
-        return new Response();
+        return Response.GenerateSuccessfulResponse();
     }
 
     private static StringContent GenerateSnakeCaseJson(TBody body)

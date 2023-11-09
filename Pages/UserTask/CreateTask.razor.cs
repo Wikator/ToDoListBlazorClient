@@ -54,8 +54,7 @@ public partial class CreateTask
         var response = await TaskService.SimplePostAsync(CreateTaskDto);
         if (!response.IsSuccess)
         {
-            PostErrorMessage = response.Message
-                ?? "Something went wrong when updating";
+            PostErrorMessage = response.Message;
         }
         else
         {

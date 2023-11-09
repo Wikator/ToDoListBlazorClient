@@ -29,8 +29,7 @@ public partial class UpdateCategory
 
         if (response.Data is null)
         {
-            GetErrorMessage = response.Message
-                ?? "Something went wrong when fetching data";
+            GetErrorMessage = response.Message;
         }
         else
         {
@@ -51,8 +50,7 @@ public partial class UpdateCategory
         }
         else
         {
-            PutErrorMessage = response.Message
-                ?? "Error when updating";
+            PutErrorMessage = response.Message;
         }
     }
 }

@@ -25,8 +25,7 @@ public partial class Tasks
         }
         else
         {
-            GetErrorMessage = response.Message
-                ?? "Something went wrong when fetching data";
+            GetErrorMessage = response.Message;
         }
     }
 
@@ -50,7 +49,7 @@ public partial class Tasks
         }
         else
         {
-            DeleteErrorMessages.Add(response.Message ?? "Something went wrong when deleting data");
+            DeleteErrorMessages.Add(response.Message);
         }
     }
 }

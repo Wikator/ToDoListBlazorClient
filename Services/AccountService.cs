@@ -72,7 +72,7 @@ public class AccountService : IAccountService
 
         _httpClient.DefaultRequestHeaders.Authorization = null;
         await _authStateProvider.LoggedOut();
-        return new Response();
+        return Response.GenerateSuccessfulResponse();
     }
 
     private async Task<Response<UserDto>> LoginOrRegister(string url, object body)
@@ -85,7 +85,7 @@ public class AccountService : IAccountService
         var token = response.Headers.GetValues("Authorization").FirstOrDefault();
 
         if (token is null)
-            return await Response<UserDto>.GenerateFailedResponseAsync(null);
+            return await Response<UserDto>.GenerateFailedResponseAsync(response.Content);
 
         var user = await Response<UserDto>.GenerateSuccessfulResponseAsync(response.Content);
 

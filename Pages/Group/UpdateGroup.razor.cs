@@ -34,8 +34,7 @@ public partial class UpdateGroup
             }
             else
             {
-                GetErrorMessage = response.Message
-                    ?? "Something went wrong when fetching data";
+                GetErrorMessage = response.Message;
             }
         }
     }
@@ -52,8 +51,7 @@ public partial class UpdateGroup
         }
         else
         {
-            PutErrorMessage = response.Message
-                ?? "Something went wrong when updating";
+            PutErrorMessage = response.Message;
         }
     }
 }
