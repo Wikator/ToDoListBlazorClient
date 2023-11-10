@@ -8,4 +8,10 @@ public static class ClaimsPrincipalExtensions
     {
         return principal.FindFirst(c => c.Type == "email")?.Value;
     }
+
+    public static int? GetGroup(this ClaimsPrincipal principal)
+    {
+        var groupId = principal.FindFirst(c => c.Type == "group")?.Value;
+        return string.IsNullOrEmpty(groupId) ? null : int.Parse(groupId);
+    }
 }

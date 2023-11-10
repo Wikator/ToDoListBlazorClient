@@ -1,8 +1,10 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using ToDoListBlazorClient.Extensions;
+using ToDoListBlazorClient.Helpers;
 using ToDoListBlazorClient.Models.DTOs.User;
 using ToDoListBlazorClient.Providers;
 using ToDoListBlazorClient.Services.Base;
@@ -47,7 +49,7 @@ public class AccountService : IAccountService
     public async Task<Response<UserDto>> ChangePasswordAsync(UserEditDto edit)
     {
         await _httpClient.AddJwtTokenAsync(_localStorage);
-        var response = await _httpClient.PutAsJsonAsync("users", edit);
+        var response = await _httpClient.PutAsync("users", GenerateSnakeCaseJson(edit));
 
         if (!response.IsSuccessStatusCode)
             return await Response<UserDto>.GenerateFailedResponseAsync(response.Content);
@@ -77,7 +79,7 @@ public class AccountService : IAccountService
 
     private async Task<Response<UserDto>> LoginOrRegister(string url, object body)
     {
-        var response = await _httpClient.PostAsJsonAsync(url, body);
+        var response = await _httpClient.PostAsync(url, GenerateSnakeCaseJson(body));
 
         if (!response.IsSuccessStatusCode)
             return await Response<UserDto>.GenerateFailedResponseAsync(response.Content);
@@ -95,5 +97,17 @@ public class AccountService : IAccountService
         token = token.Split(' ')[1].TrimEnd('"');
         await _authStateProvider.LoggedIn(token);
         return user;
+    }
+    
+    
+    private static StringContent GenerateSnakeCaseJson<T>(T body)
+    {
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = SnakeCaseNamingPolicy.Instance
+        };
+        
+        var requestBody = JsonSerializer.Serialize(body, jsonSerializerOptions);
+        return new StringContent(requestBody, Encoding.UTF8, "application/json");
     }
 }

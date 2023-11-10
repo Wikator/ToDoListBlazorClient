@@ -1,24 +1,62 @@
 ﻿@page "/Register"
+@using AutoMapper
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
 
 <h3>Register</h3>
 
-<ErrorMessage Message="@Error" />
+@if (Options is null)
+{
+    <ErrorMessage Message="@FetchError" />
+}
+else
+{
+    <ErrorMessage Message="@PutError" />
 
-<EditForm Model="RegisterDto" OnValidSubmit="Submit">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
-    <TextInputField @bind-Value="RegisterDto.Email" Type="email" Label="Email" ValidationFor="@(() => RegisterDto.Email)"/>
-    <TextInputField @bind-Value="RegisterDto.Password" Type="password" Label="Password" ValidationFor="@(() => RegisterDto.Password)"/>
-
-    <button type="submit" class="btn btn-primary mt-2" disabled="@(!context.Validate())">Create</button>
-</EditForm>
-
+    <EditForm Model="RegisterDto" OnValidSubmit="Submit">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <TextInputField @bind-Value="RegisterDto.Email" Type="email" Label="Email" ValidationFor="@(() => RegisterDto.Email)"/>
+        <TextInputField @bind-Value="RegisterDto.Password" Type="password" Label="Password" ValidationFor="@(() => RegisterDto.Password)"/>
+        <label for="groups">Choose group:</label>
+        <InputSelect @bind-Value="@RegisterDto.GroupId" name="groups" id="groups" class="form-select mb-3">
+            <option selected value="">None</option>
+            @foreach (var option in Options)
+            {
+                <option value="@option.Value">@option.Name</option>
+            }
+        </InputSelect>
+        
+        <SubmitButton IsValid="@context.Validate()">Register</SubmitButton>
+    </EditForm>
+}
 
 @code {
+    [Inject]
+    public required IGroupService GroupService { get; init; }
+    
+    [Inject]
+    public required IMapper Mapper { get; init; }
+    
     private RegisterDto RegisterDto { get; } = new();
-    private string? Error { get; set; }
+    private string? PutError { get; set; }
+    private string? FetchError { get; set; }
+    
+    private IEnumerable<Option>? Options { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await GroupService.SimpleGetAsync();
+
+        if (response.Data is null)
+        {
+            FetchError = response.Message;
+        }
+        else
+        {
+            Options = Mapper.Map<IEnumerable<Option>>(response.Data);
+        }
+    }
 
     private async Task Submit()
     {
@@ -26,7 +64,7 @@
 
         if (!response.IsSuccess)
         {
-            Error = response.Message;
+            PutError = response.Message;
         }
         else
         {

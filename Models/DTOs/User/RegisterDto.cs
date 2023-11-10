@@ -9,4 +9,6 @@ public class RegisterDto
     [Required]
     [StringLength(30, MinimumLength = 6)]
     public string Password { get; set; } = string.Empty;
+    
+    public int? GroupId { get; set; }
 }
