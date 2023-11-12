@@ -28,13 +28,9 @@ public partial class UpdateCategory
         var response = await CategoryService.SimpleGetAsync(Id.Value);
 
         if (response.Data is null)
-        {
             GetErrorMessage = response.Message;
-        }
         else
-        {
-            CategoryDto = Mapper.Map<CreateCategoryDto>(response.Data);            
-        }
+            CategoryDto = Mapper.Map<CreateCategoryDto>(response.Data);
     }
 
     private async Task HandleSubmit()
@@ -45,12 +41,8 @@ public partial class UpdateCategory
         var response = await CategoryService.SimplePutAsync(Id.Value, CategoryDto);
 
         if (response.IsSuccess)
-        {
             NavigationManager.NavigateTo("categories");
-        }
         else
-        {
             PutErrorMessage = response.Message;
-        }
     }
 }

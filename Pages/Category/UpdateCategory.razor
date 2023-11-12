@@ -10,13 +10,13 @@
     }
     else
     {
-        <ErrorMessage Message="@GetErrorMessage" />
+        <ErrorMessage Message="@GetErrorMessage"/>
     }
 }
 else
 {
-    <ErrorMessage Message="@PutErrorMessage" />
-    
+    <ErrorMessage Message="@PutErrorMessage"/>
+
     <EditForm Model="CategoryDto" OnValidSubmit="HandleSubmit">
         <DataAnnotationsValidator/>
         <TextInputField @bind-Value="CategoryDto.Name" Label="Name" ValidationFor="@(() => CategoryDto.Name)"/>

@@ -1,10 +1,23 @@
 ﻿@page "/subjects/create"
 <h3>CreateSubject</h3>
 
-<EditForm Model="Subject" OnSubmit="HandleSubmit">
-    <ErrorMessage Message="@ErrorMessage" />
-    <DataAnnotationsValidator/>
-    <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)"/>
+@if (Subject.SubjectTimesAttributes is null)
+{
+    <ErrorMessage Message="@FetchErrorMessage"/>
+}
+else
+{
+    <EditForm Model="Subject" OnSubmit="HandleSubmit">
+        <ErrorMessage Message="@CreateErrorMessage"/>
+        <DataAnnotationsValidator/>
+        <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)"/>
 
-    <SubmitButton IsValid="@context.Validate()">Create</SubmitButton>
-</EditForm>
+        @foreach (var (groupName, subjectTime) in Subject.SubjectTimesAttributes)
+        {
+            <label for="@($"time {subjectTime.GroupId}")">@(groupName):</label>
+            <InputDate @bind-Value="@subjectTime.Time" class="form-control" Type="InputDateType.Time" id="@($"time {subjectTime.GroupId}")"/>
+        }
+
+        <SubmitButton IsValid="@context.Validate()">Create</SubmitButton>
+    </EditForm>
+}

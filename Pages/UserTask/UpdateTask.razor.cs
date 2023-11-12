@@ -10,7 +10,7 @@ namespace ToDoListBlazorClient.Pages.UserTask;
 public partial class UpdateTask
 {
     [Parameter] public int? Id { get; init; }
-    
+
     [Inject] public required ITaskService TaskService { get; init; }
     [Inject] public required IGroupService GroupService { get; init; }
     [Inject] public required ISubjectService SubjectService { get; init; }
@@ -20,7 +20,7 @@ public partial class UpdateTask
 
     private Dictionary<string, IEnumerable<Option>>? Options { get; set; }
     private CreateTaskDto? Model { get; set; }
-    
+
     private string? GetErrorMessage { get; set; }
     private string? FetchErrorMessage { get; set; }
     private string? UpdateErrorMessage { get; set; }
@@ -33,12 +33,12 @@ public partial class UpdateTask
         var categoriesTask = CategoryService.SimpleGetAsync();
 
         await Task.WhenAll(groupsTask, subjectsTask, categoriesTask);
-        
-        var groupsResponse = groupsTask.Result;
-        var subjectsResponse = subjectsTask.Result;
-        var categoriesResponse = categoriesTask.Result;
-        
-        if (groupsResponse.Data is null || subjectsResponse.Data is null || categoriesResponse.Data is null)
+
+        var groups = groupsTask.Result.Data;
+        var subjects = subjectsTask.Result.Data;
+        var categories = categoriesTask.Result.Data;
+
+        if (groups is null || subjects is null || categories is null)
         {
             GetErrorMessage = "Failed to load data. Please try again later.";
             return;
@@ -46,9 +46,9 @@ public partial class UpdateTask
 
         Options = new Dictionary<string, IEnumerable<Option>>
         {
-            { "Group", Mapper.Map<IEnumerable<Option>>(groupsResponse.Data) },
-            { "Subject", Mapper.Map<IEnumerable<Option>>(subjectsResponse.Data) },
-            { "Categories", Mapper.Map<IEnumerable<Option>>(categoriesResponse.Data) }
+            { "Group", Mapper.Map<IEnumerable<Option>>(groups) },
+            { "Subject", Mapper.Map<IEnumerable<Option>>(subjects) },
+            { "Categories", Mapper.Map<IEnumerable<Option>>(categories) }
         };
     }
 
@@ -63,13 +63,9 @@ public partial class UpdateTask
             var response = await TaskService.SimpleGetAsync(Id.Value);
 
             if (response.Data is null)
-            {
                 FetchErrorMessage = response.Message;
-            }
             else
-            {
                 Model = Mapper.Map<CreateTaskDto>(response.Data);
-            }
         }
     }
 
@@ -77,16 +73,12 @@ public partial class UpdateTask
     {
         if (Id is null || Model is null)
             return;
-        
+
         var response = await TaskService.SimplePutAsync(Id.Value, Model);
 
         if (response.IsSuccess)
-        {
             NavigationManager.NavigateTo("/tasks");
-        }
         else
-        {
             UpdateErrorMessage = response.Message;
-        }
     }
 }

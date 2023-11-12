@@ -22,13 +22,9 @@ public partial class Categories
         var response = await CategoryService.SimpleGetAsync();
 
         if (response.Data is null)
-        {
             GetErrorMessage = response.Message;
-        }
         else
-        {
             CategoryList = response.Data;
-        }
     }
 
     private void NavigateToCreateCategory()
@@ -46,12 +42,8 @@ public partial class Categories
         var response = await CategoryService.SimpleDeleteAsync(id);
 
         if (!response.IsSuccess)
-        {
             DeleteErrorMessages.Add(response.Message);
-        }
         else
-        {
             CategoryList = CategoryList?.Where(s => s.Id != id);
-        }
     }
 }

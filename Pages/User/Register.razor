@@ -7,11 +7,11 @@
 
 @if (Options is null)
 {
-    <ErrorMessage Message="@FetchError" />
+    <ErrorMessage Message="@FetchError"/>
 }
 else
 {
-    <ErrorMessage Message="@PutError" />
+    <ErrorMessage Message="@PutError"/>
 
     <EditForm Model="RegisterDto" OnValidSubmit="Submit">
         <DataAnnotationsValidator/>
@@ -26,22 +26,23 @@ else
                 <option value="@option.Value">@option.Name</option>
             }
         </InputSelect>
-        
+
         <SubmitButton IsValid="@context.Validate()">Register</SubmitButton>
     </EditForm>
 }
 
 @code {
+
     [Inject]
     public required IGroupService GroupService { get; init; }
-    
+
     [Inject]
     public required IMapper Mapper { get; init; }
-    
+
     private RegisterDto RegisterDto { get; } = new();
     private string? PutError { get; set; }
     private string? FetchError { get; set; }
-    
+
     private IEnumerable<Option>? Options { get; set; }
 
     protected override async Task OnInitializedAsync()

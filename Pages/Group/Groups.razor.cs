@@ -22,13 +22,9 @@ public partial class Groups
         var response = await GroupService.SimpleGetAsync();
 
         if (response.Data is null)
-        {
-            GetErrorMessage = response.Message;  
-        }
+            GetErrorMessage = response.Message;
         else
-        {
             GroupList = response.Data;
-        }
     }
 
     private void NavigateToCreateGroup()
@@ -46,12 +42,8 @@ public partial class Groups
         var response = await GroupService.SimpleDeleteAsync(groupId);
 
         if (!response.IsSuccess)
-        {
             DeleteErrorMessages.Add(response.Message);
-        }
         else
-        {
             GroupList = GroupList?.Where(g => g.Id != groupId);
-        }
     }
 }

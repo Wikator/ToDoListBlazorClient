@@ -8,4 +8,3 @@ public class UserEditDto
     [StringLength(30, MinimumLength = 6)]
     public string Password { get; set; } = string.Empty;
 }
-   

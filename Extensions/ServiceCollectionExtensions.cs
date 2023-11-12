@@ -12,6 +12,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISubjectService, SubjectService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<ISubjectTimeService, SubjectTimeService>();
 
         return services;
     }

@@ -15,12 +15,12 @@ public partial class CreateTask
     [Inject] public required ITaskService TaskService { private get; init; }
     [Inject] public required NavigationManager NavigationManager { private get; init; }
     [Inject] public required IMapper Mapper { private get; init; }
-    
+
     private string? GetErrorMessage { get; set; }
     private string? PostErrorMessage { get; set; }
 
     private Dictionary<string, IEnumerable<Option>>? Options { get; set; }
-    
+
     private CreateTaskDto CreateTaskDto { get; } = new();
 
     protected override async Task OnInitializedAsync()
@@ -30,12 +30,12 @@ public partial class CreateTask
         var categoriesTask = CategoryService.SimpleGetAsync();
 
         await Task.WhenAll(groupsTask, subjectsTask, categoriesTask);
-        
-        var groupsResponse = groupsTask.Result;
-        var subjectsResponse = subjectsTask.Result;
-        var categoriesResponse = categoriesTask.Result;
-        
-        if (groupsResponse.Data is null || subjectsResponse.Data is null || categoriesResponse.Data is null)
+
+        var groups = groupsTask.Result.Data;
+        var subjects = subjectsTask.Result.Data;
+        var categories = categoriesTask.Result.Data;
+
+        if (groups is null || subjects is null || categories is null)
         {
             GetErrorMessage = "Failed to load data. Please try again later.";
             return;
@@ -43,22 +43,18 @@ public partial class CreateTask
 
         Options = new Dictionary<string, IEnumerable<Option>>
         {
-            { "Group", Mapper.Map<IEnumerable<Option>>(groupsResponse.Data) },
-            { "Subject", Mapper.Map<IEnumerable<Option>>(subjectsResponse.Data) },
-            { "Categories", Mapper.Map<IEnumerable<Option>>(categoriesResponse.Data) }
+            { "Group", Mapper.Map<IEnumerable<Option>>(groups) },
+            { "Subject", Mapper.Map<IEnumerable<Option>>(subjects) },
+            { "Categories", Mapper.Map<IEnumerable<Option>>(categories) }
         };
     }
-    
+
     private async Task HandleSubmit()
     {
         var response = await TaskService.SimplePostAsync(CreateTaskDto);
         if (!response.IsSuccess)
-        {
             PostErrorMessage = response.Message;
-        }
         else
-        {
             NavigationManager.NavigateTo("/tasks");
-        }
     }
 }

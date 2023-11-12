@@ -1,0 +1,44 @@
+﻿@page "/update_role"
+
+<h3>Update Role</h3>
+
+@if (Users is null)
+{
+    <ErrorMessage Message="@FetchErrorMessage"/>
+}
+else
+{
+    @foreach (var message in DeleteErrorMessages)
+    {
+        <ErrorMessage Message="@message"/>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered" style="width:100%">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in Users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                    <td>
+                        @if (user.Id != UserId)
+                        {
+                            <button class="btn btn-warning" @onclick="@(() => UpdateUserRole(user.Id, user.Role == "admin" ? "customer" : "admin"))">Update</button>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

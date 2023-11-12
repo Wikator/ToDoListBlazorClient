@@ -20,13 +20,9 @@ public partial class Tasks
         var response = await TaskService.SimpleGetAsync();
 
         if (response.IsSuccess)
-        {
             TaskList = response.Data;
-        }
         else
-        {
             GetErrorMessage = response.Message;
-        }
     }
 
     private void NavigateToCreateTask()
@@ -44,12 +40,8 @@ public partial class Tasks
         var response = await TaskService.SimpleDeleteAsync(id);
 
         if (response.IsSuccess)
-        {
             TaskList = TaskList?.Where(t => t.Id != id);
-        }
         else
-        {
             DeleteErrorMessages.Add(response.Message);
-        }
     }
 }

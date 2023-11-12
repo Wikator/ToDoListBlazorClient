@@ -1,22 +1,35 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models.DTOs.Subject;
+using ToDoListBlazorClient.Models.DTOs.SubjectTime;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Subject;
 
 public partial class UpdateSubject
 {
+    private class UpdateSubjectModel
+    {
+        [Required] public required string Name { get; set; }
+        public required List<(string, UpdateSubjectTimeModel)> SubjectTimes { get; init; }
+    }
+
+    private class UpdateSubjectTimeModel
+    {
+        public int Id { get; init; }
+        public TimeOnly? Time { get; set; }
+    }
+
+    private UpdateSubjectModel? Subject { get; set; }
+
     [Parameter] public int? Id { get; set; }
 
-    [Inject] public required ISubjectService SubjectService { private get; init; }
-    [Inject] public required NavigationManager NavigationManager { private get; init; }
-    [Inject] public required IMapper Mapper { private get; init; }
+    [Inject] public required ISubjectService SubjectService { get; init; }
+    [Inject] public required ISubjectTimeService SubjectTimeService { get; init; }
+    [Inject] public required NavigationManager NavigationManager { get; init; }
 
     private string? GetErrorMessage { get; set; }
     private string? PutErrorMessage { get; set; }
-
-    private CreateSubjectDto? Subject { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -26,16 +39,29 @@ public partial class UpdateSubject
         }
         else
         {
-            var response = await SubjectService.SimpleGetAsync(Id.Value);
+            var subjectTask = SubjectService.SimpleGetAsync(Id.Value);
+            var subjectTimesTask = SubjectService.GetSubjectTimesAsync(Id.Value);
 
-            if (response.IsSuccess)
+            await Task.WhenAll(subjectTask, subjectTimesTask);
+
+            var subject = subjectTask.Result.Data;
+            var subjectTimes = subjectTimesTask.Result.Data;
+
+            if (subject is null || subjectTimes is null)
             {
-                Subject = Mapper.Map<CreateSubjectDto>(response.Data);
+                GetErrorMessage = "Failed to load data. Please try again later.";
+                return;
             }
-            else
+
+            Subject = new UpdateSubjectModel
             {
-                GetErrorMessage = response.Message;
-            }
+                Name = subject.Name,
+                SubjectTimes = subjectTimes.Select(s => (s.Group.Name, new UpdateSubjectTimeModel
+                {
+                    Id = s.Id,
+                    Time = s.Time
+                })).ToList()
+            };
         }
     }
 
@@ -44,15 +70,26 @@ public partial class UpdateSubject
         if (Subject is null || Id is null)
             return;
 
-        var response = await SubjectService.SimplePutAsync(Id.Value, Subject);
+        var subjectDto = new CreateSubjectDto()
+        {
+            Name = Subject.Name
+        };
 
-        if (!response.IsSuccess)
-        {
-            PutErrorMessage = response.Message;
-        }
+        var subjectTask = SubjectService.SimplePutAsync(Id.Value, subjectDto);
+        var subjectTimesTasks = Subject.SubjectTimes.Select(s =>
+            SubjectTimeService.UpdateSubjectTimeAsync(s.Item2.Id, new UpdateSubjectTimeDto
+            {
+                Time = s.Item2.Time
+            })).ToList();
+
+        var allTasks = new List<Task> { subjectTask };
+        allTasks.AddRange(subjectTimesTasks);
+
+        await Task.WhenAll(allTasks);
+
+        if (!subjectTask.Result.IsSuccess || !subjectTimesTasks.All(s => s.Result.IsSuccess))
+            PutErrorMessage = "Something went wrong. Please try again later.";
         else
-        {
             NavigationManager.NavigateTo("/subjects");
-        }
     }
 }

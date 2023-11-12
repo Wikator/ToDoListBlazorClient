@@ -10,12 +10,12 @@
     }
     else
     {
-        <ErrorMessage Message="@GetErrorMessage" />
+        <ErrorMessage Message="@GetErrorMessage"/>
     }
 }
 else
 {
-    <ErrorMessage Message="@PutErrorMessage" />
+    <ErrorMessage Message="@PutErrorMessage"/>
     <EditForm Model="Group" OnSubmit="HandleSubmit">
         <DataAnnotationsValidator/>
         <TextInputField @bind-Value="Group.Name" Label="Name" ValidationFor="@(() => Group.Name)"></TextInputField>

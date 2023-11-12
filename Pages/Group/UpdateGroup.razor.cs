@@ -29,13 +29,9 @@ public partial class UpdateGroup
             var response = await GroupService.SimpleGetAsync(Id.Value);
 
             if (response.Data is null)
-            {
                 Group = Mapper.Map<CreateGroupDto>(response.Data);
-            }
             else
-            {
                 GetErrorMessage = response.Message;
-            }
         }
     }
 
@@ -46,12 +42,8 @@ public partial class UpdateGroup
 
         var response = await GroupService.SimplePutAsync(Id.Value, Group);
         if (response.IsSuccess)
-        {
             NavigationManager.NavigateTo("groups");
-        }
         else
-        {
             PutErrorMessage = response.Message;
-        }
     }
 }

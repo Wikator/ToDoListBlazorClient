@@ -98,15 +98,15 @@ public class AccountService : IAccountService
         await _authStateProvider.LoggedIn(token);
         return user;
     }
-    
-    
+
+
     private static StringContent GenerateSnakeCaseJson<T>(T body)
     {
         var jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = SnakeCaseNamingPolicy.Instance
         };
-        
+
         var requestBody = JsonSerializer.Serialize(body, jsonSerializerOptions);
         return new StringContent(requestBody, Encoding.UTF8, "application/json");
     }

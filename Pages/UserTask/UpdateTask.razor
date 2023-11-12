@@ -5,16 +5,16 @@
 @if (Options is null || Model is null)
 {
     <h4>Loading data...</h4>
-    <ErrorMessage Message="@FetchErrorMessage" />
-    <ErrorMessage Message="@GetErrorMessage" />
+    <ErrorMessage Message="@FetchErrorMessage"/>
+    <ErrorMessage Message="@GetErrorMessage"/>
 }
 else
 {
     <EditForm Model="Model" OnValidSubmit="HandleSubmit">
-        <DataAnnotationsValidator />
-        <ErrorMessage Message="@UpdateErrorMessage" />
-        <TextInputField @bind-Value="@Model.Name" Label="Name" ValidationFor="@(() => Model.Name)" />
-        <TextInputField @bind-Value="@Model.Description" Label="Description" ValidationFor="@(() => Model.Description)" />
+        <DataAnnotationsValidator/>
+        <ErrorMessage Message="@UpdateErrorMessage"/>
+        <TextInputField @bind-Value="@Model.Name" Label="Name" ValidationFor="@(() => Model.Name)"/>
+        <TextInputField @bind-Value="@Model.Description" Label="Description" ValidationFor="@(() => Model.Description)"/>
         <label for="groups">Choose group:</label>
         <InputSelect @bind-Value="@Model.GroupId" name="groups" id="groups" class="form-select mb-3">
             <option selected value="">---Choose---</option>
@@ -23,7 +23,7 @@ else
                 <option value="@option.Value">@option.Name</option>
             }
         </InputSelect>
-        <ValidationMessage For="@(() => Model.GroupId)" />
+        <ValidationMessage For="@(() => Model.GroupId)"/>
 
         <label for="subjects">Choose subject:</label>
         <InputSelect @bind-Value="@Model.SubjectId" name="subjects" id="subjects" class="form-select mb-3">
@@ -33,7 +33,7 @@ else
                 <option value="@option.Value">@option.Name</option>
             }
         </InputSelect>
-        <ValidationMessage For="@(() => Model.SubjectId)" />
+        <ValidationMessage For="@(() => Model.SubjectId)"/>
 
         <label for="categories">Choose category:</label>
         <InputSelect @bind-Value="@Model.CategoryId" name="categories" id="categories" class="form-select mb-3">
@@ -43,8 +43,8 @@ else
                 <option value="@option.Value">@option.Name</option>
             }
         </InputSelect>
-        <ValidationMessage For="@(() => Model.CategoryId)" />
-        
+        <ValidationMessage For="@(() => Model.CategoryId)"/>
+
         <SubmitButton>Update</SubmitButton>
     </EditForm>
 }

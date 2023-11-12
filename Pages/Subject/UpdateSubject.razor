@@ -10,15 +10,21 @@
     }
     else
     {
-        <ErrorMessage Message="@GetErrorMessage" />
+        <ErrorMessage Message="@GetErrorMessage"/>
     }
 }
 else
 {
     <EditForm Model="Subject" OnValidSubmit="HandleSubmit">
         <DataAnnotationsValidator/>
-        <ErrorMessage>@PutErrorMessage</ErrorMessage>
+        <ErrorMessage Message="@PutErrorMessage"/>
         <TextInputField @bind-Value="Subject.Name" Label="Name" ValidationFor="@(() => Subject.Name)"/>
+
+        @foreach (var (groupName, subjectTime) in Subject.SubjectTimes)
+        {
+            <label for="@($"time {subjectTime.Id}")">@(groupName):</label>
+            <InputDate @bind-Value="@subjectTime.Time" class="form-control" Type="InputDateType.Time" id="@($"time {subjectTime.Id}")"/>
+        }
 
         <SubmitButton IsValid="@context.Validate()">Update</SubmitButton>
     </EditForm>

@@ -19,12 +19,8 @@ public partial class CreateCategory
         var response = await CategoryService.SimplePostAsync(Category);
 
         if (response.IsSuccess)
-        {
             NavigationManager.NavigateTo("/categories");
-        }
         else
-        {
             ErrorMessage = response.Message;
-        }
     }
 }

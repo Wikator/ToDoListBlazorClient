@@ -9,19 +9,19 @@
 <div class="mb-4">Your group: @(GroupId?.ToString() ?? "None")</div>
 <EditForm Model="UserEdit" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator/>
-    <ErrorMessage Message="@PutErrorMessage" />
+    <ErrorMessage Message="@PutErrorMessage"/>
     <TextInputField Type="password" @bind-Value="UserEdit.Password" Label="New Password" ValidationFor="@(() => UserEdit.Password)"/>
     <SubmitButton IsValid="context.Validate()">Update</SubmitButton>
-</EditForm> 
+</EditForm>
 
 @code {
     private UserEditDto UserEdit { get; } = new();
     private string? PutErrorMessage { get; set; }
     private int? GroupId { get; set; }
-    
+
     [Inject]
     public required IMapper Mapper { get; init; }
-    
+
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
@@ -44,4 +44,5 @@
             PutErrorMessage = response.Message;
         }
     }
+
 }

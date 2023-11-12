@@ -26,13 +26,11 @@ public class Response<T>
     public static async Task<Response<T>> GenerateFailedResponseAsync(HttpContent httpContent)
     {
         var message = await httpContent.ReadAsStringAsync();
-        
+
         return new Response<T>
         {
             IsSuccess = false,
-            Message = string.IsNullOrEmpty(message) ?
-                "Something went wrong. Please try again later." :
-                message
+            Message = string.IsNullOrEmpty(message) ? "Something went wrong. Please try again later." : message
         };
     }
 }
@@ -50,17 +48,15 @@ public class Response
             Message = "Operation completed successfully."
         };
     }
-    
+
     public static async Task<Response> GenerateFailedResponseAsync(HttpContent httpContent)
     {
         var message = await httpContent.ReadAsStringAsync();
-        
+
         return new Response
         {
             IsSuccess = false,
-            Message = string.IsNullOrEmpty(message) ?
-                "Something went wrong. Please try again later." :
-                message
+            Message = string.IsNullOrEmpty(message) ? "Something went wrong. Please try again later." : message
         };
     }
 }

@@ -78,7 +78,7 @@ public abstract class SimpleHttpService<TResponse, TBody> : ISimpleHttpService<T
         {
             PropertyNamingPolicy = SnakeCaseNamingPolicy.Instance
         };
-        
+
         var requestBody = JsonSerializer.Serialize(body, jsonSerializerOptions);
         return new StringContent(requestBody, Encoding.UTF8, "application/json");
     }

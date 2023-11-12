@@ -5,15 +5,15 @@
 @if (Options is null)
 {
     <h4>Loading data...</h4>
-    <ErrorMessage Message="@GetErrorMessage" />
+    <ErrorMessage Message="@GetErrorMessage"/>
 }
 else
 {
     <EditForm Model="CreateTaskDto" OnValidSubmit="HandleSubmit">
-        <DataAnnotationsValidator />
-        <ErrorMessage Message="@PostErrorMessage" />
-        <TextInputField @bind-Value="@CreateTaskDto.Name" Label="Name" ValidationFor="@(() => CreateTaskDto.Name)" />
-        <TextInputField @bind-Value="@CreateTaskDto.Description" Label="Description" ValidationFor="@(() => CreateTaskDto.Description)" />
+        <DataAnnotationsValidator/>
+        <ErrorMessage Message="@PostErrorMessage"/>
+        <TextInputField @bind-Value="@CreateTaskDto.Name" Label="Name" ValidationFor="@(() => CreateTaskDto.Name)"/>
+        <TextInputField @bind-Value="@CreateTaskDto.Description" Label="Description" ValidationFor="@(() => CreateTaskDto.Description)"/>
         <label for="groups">Choose group:</label>
         <InputSelect @bind-Value="@CreateTaskDto.GroupId" name="groups" id="groups" class="form-select mb-3">
             <option selected value="">---Choose---</option>
@@ -22,7 +22,7 @@ else
                 <option value="@option.Value">@option.Name</option>
             }
         </InputSelect>
-        <ValidationMessage For="@(() => CreateTaskDto.GroupId)" />
+        <ValidationMessage For="@(() => CreateTaskDto.GroupId)"/>
 
         <label for="subjects">Choose subject:</label>
         <InputSelect @bind-Value="@CreateTaskDto.SubjectId" name="subjects" id="subjects" class="form-select mb-3">
@@ -32,7 +32,7 @@ else
                 <option value="@option.Value">@option.Name</option>
             }
         </InputSelect>
-        <ValidationMessage For="@(() => CreateTaskDto.SubjectId)" />
+        <ValidationMessage For="@(() => CreateTaskDto.SubjectId)"/>
 
         <label for="categories">Choose category:</label>
         <InputSelect @bind-Value="@CreateTaskDto.CategoryId" name="categories" id="categories" class="form-select mb-3">
@@ -42,8 +42,8 @@ else
                 <option value="@option.Value">@option.Name</option>
             }
         </InputSelect>
-        <ValidationMessage For="@(() => CreateTaskDto.CategoryId)" />
-        
+        <ValidationMessage For="@(() => CreateTaskDto.CategoryId)"/>
+
         <SubmitButton>Create</SubmitButton>
     </EditForm>
 }
