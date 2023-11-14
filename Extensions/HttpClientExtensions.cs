@@ -5,12 +5,12 @@ namespace ToDoListBlazorClient.Extensions;
 
 public static class HttpClientExtensions
 {
-    public static async Task<AuthenticationHeaderValue?> AddJwtTokenAsync(this HttpClient httpClient,
+    public static async Task AddJwtTokenAsync(this HttpClient httpClient,
         ILocalStorageService localStorage)
     {
         var token = await localStorage.GetItemAsync<string>("accessToken");
 
-        return httpClient.DefaultRequestHeaders.Authorization = token switch
+        httpClient.DefaultRequestHeaders.Authorization = token switch
         {
             null => null,
             _ => new AuthenticationHeaderValue("Bearer", token)

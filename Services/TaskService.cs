@@ -5,12 +5,9 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services;
 
-public class TaskService : SimpleHttpService<TaskDto, CreateTaskDto>, ITaskService
+public class TaskService(ILocalStorageService localStorage,
+        HttpClient httpClient)
+    : SimpleHttpService<TaskDto, CreateTaskDto>(localStorage, httpClient), ITaskService
 {
-    public TaskService(ILocalStorageService localStorage,
-        HttpClient httpClient) : base(localStorage, httpClient)
-    {
-    }
-
     protected override string BaseUrl => "tasks/";
 }

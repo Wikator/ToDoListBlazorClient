@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using System.Text;
-using System.Text.Json;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using ToDoListBlazorClient.Extensions;
@@ -12,19 +10,15 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services;
 
-public class AccountService : IAccountService
-{
-    private readonly ApiAuthenticationStateProvider _authStateProvider;
-    private readonly HttpClient _httpClient;
-    private readonly ILocalStorageService _localStorage;
-
-    public AccountService(HttpClient httpClient, ILocalStorageService localStorage,
+public class AccountService(HttpClient httpClient, ILocalStorageService localStorage,
         AuthenticationStateProvider authStateProvider)
-    {
-        _httpClient = httpClient;
-        _localStorage = localStorage;
-        _authStateProvider = (ApiAuthenticationStateProvider)authStateProvider;
-    }
+    : IAccountService
+{
+    
+    private HttpClient HttpClient { get; } = httpClient;
+    private ILocalStorageService LocalStorage { get; } = localStorage;
+    private ApiAuthenticationStateProvider AuthStateProvider { get; } =
+        (ApiAuthenticationStateProvider)authStateProvider;
 
     public async Task<Response<UserDto>> SignInAsync(LoginDto login)
     {
@@ -48,8 +42,9 @@ public class AccountService : IAccountService
 
     public async Task<Response<UserDto>> ChangePasswordAsync(UserEditDto edit)
     {
-        await _httpClient.AddJwtTokenAsync(_localStorage);
-        var response = await _httpClient.PutAsync("users", GenerateSnakeCaseJson(edit));
+        await HttpClient.AddJwtTokenAsync(LocalStorage);
+        var stringContent = JsonUtility.GenerateSnakeCaseJson(edit);
+        var response = await HttpClient.PutAsync("users", stringContent);
 
         if (!response.IsSuccessStatusCode)
             return await Response<UserDto>.GenerateFailedResponseAsync(response.Content);
@@ -59,27 +54,28 @@ public class AccountService : IAccountService
 
     public async Task<Response> LogoutAsync()
     {
-        await _httpClient.AddJwtTokenAsync(_localStorage);
-        var response = await _httpClient.DeleteAsync("users/sign_out");
+        await HttpClient.AddJwtTokenAsync(LocalStorage);
+        var response = await HttpClient.DeleteAsync("users/sign_out");
 
         if (!response.IsSuccessStatusCode)
         {
             if (response.StatusCode != HttpStatusCode.Unauthorized)
                 return await Response.GenerateFailedResponseAsync(response.Content);
 
-            await _authStateProvider.LoggedOut();
+            await AuthStateProvider.LoggedOut();
 
             return await Response.GenerateFailedResponseAsync(response.Content);
         }
 
-        _httpClient.DefaultRequestHeaders.Authorization = null;
-        await _authStateProvider.LoggedOut();
+        HttpClient.DefaultRequestHeaders.Authorization = null;
+        await AuthStateProvider.LoggedOut();
         return Response.GenerateSuccessfulResponse();
     }
 
     private async Task<Response<UserDto>> LoginOrRegister(string url, object body)
     {
-        var response = await _httpClient.PostAsync(url, GenerateSnakeCaseJson(body));
+        var stringContent = JsonUtility.GenerateSnakeCaseJson(body);
+        var response = await HttpClient.PostAsync(url, stringContent);
 
         if (!response.IsSuccessStatusCode)
             return await Response<UserDto>.GenerateFailedResponseAsync(response.Content);
@@ -95,19 +91,7 @@ public class AccountService : IAccountService
             return user;
 
         token = token.Split(' ')[1].TrimEnd('"');
-        await _authStateProvider.LoggedIn(token);
+        await AuthStateProvider.LoggedIn(token);
         return user;
-    }
-
-
-    private static StringContent GenerateSnakeCaseJson<T>(T body)
-    {
-        var jsonSerializerOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = SnakeCaseNamingPolicy.Instance
-        };
-
-        var requestBody = JsonSerializer.Serialize(body, jsonSerializerOptions);
-        return new StringContent(requestBody, Encoding.UTF8, "application/json");
     }
 }

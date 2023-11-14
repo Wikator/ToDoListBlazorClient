@@ -42,7 +42,7 @@
             <AuthorizeView>
                 <Authorized>
                     <NavLink class="nav-link" href="#">
-                        <span class="oi oi-person" aria-hidden="true"></span> @context.User.GetEmail()
+                        <span class="oi oi-person" aria-hidden="true"></span> @context.User.GetEmail()  @context.User.IsInRole("admin")
                     </NavLink>
                     <NavLink class="nav-link" href="logout">
                         <span class="oi oi-person" aria-hidden="true"></span> Logout

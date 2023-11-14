@@ -1,58 +1,53 @@
-﻿using System.Text;
-using System.Text.Json;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using ToDoListBlazorClient.Extensions;
 using ToDoListBlazorClient.Helpers;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services.Base;
 
-public abstract class SimpleHttpService<TResponse, TBody> : ISimpleHttpService<TResponse, TBody>
-{
-    private readonly HttpClient _httpClient;
-    private readonly ILocalStorageService _localStorage;
-
-    protected SimpleHttpService(ILocalStorageService localStorage,
+public abstract class SimpleHttpService<TResponse, TBody>(ILocalStorageService localStorage,
         HttpClient httpClient)
-    {
-        _localStorage = localStorage;
-        _httpClient = httpClient;
-    }
-
+    : ISimpleHttpService<TResponse, TBody>
+{
+    private ILocalStorageService LocalStorage { get; } = localStorage;
+    private HttpClient HttpClient { get; } = httpClient;
+    
     protected abstract string BaseUrl { get; }
 
     public async Task<Response<IEnumerable<TResponse>>> SimpleGetAsync()
     {
-        await _httpClient.AddJwtTokenAsync(_localStorage);
-        var response = await _httpClient.GetAsync(BaseUrl);
+        await HttpClient.AddJwtTokenAsync(LocalStorage);
+        var response = await HttpClient.GetAsync(BaseUrl);
         return await GenerateResponseAsync<IEnumerable<TResponse>>(response);
     }
 
     public async Task<Response<TResponse>> SimpleGetAsync(int id)
     {
-        await _httpClient.AddJwtTokenAsync(_localStorage);
-        var response = await _httpClient.GetAsync(BaseUrl + id);
+        await HttpClient.AddJwtTokenAsync(LocalStorage);
+        var response = await HttpClient.GetAsync(BaseUrl + id);
         return await GenerateResponseAsync<TResponse>(response);
     }
 
     public async Task<Response<TResponse>> SimplePostAsync(TBody body)
     {
-        await _httpClient.AddJwtTokenAsync(_localStorage);
-        var response = await _httpClient.PostAsync(BaseUrl, GenerateSnakeCaseJson(body));
+        await HttpClient.AddJwtTokenAsync(LocalStorage);
+        var stringContent = JsonUtility.GenerateSnakeCaseJson(body);
+        var response = await HttpClient.PostAsync(BaseUrl, stringContent);
         return await GenerateResponseAsync<TResponse>(response);
     }
 
     public async Task<Response<TResponse>> SimplePutAsync(int id, TBody body)
     {
-        await _httpClient.AddJwtTokenAsync(_localStorage);
-        var response = await _httpClient.PutAsync(BaseUrl + id, GenerateSnakeCaseJson(body));
+        await HttpClient.AddJwtTokenAsync(LocalStorage);
+        var stringContent = JsonUtility.GenerateSnakeCaseJson(body);
+        var response = await HttpClient.PutAsync(BaseUrl + id, stringContent);
         return await GenerateResponseAsync<TResponse>(response);
     }
 
     public async Task<Response> SimpleDeleteAsync(int id)
     {
-        await _httpClient.AddJwtTokenAsync(_localStorage);
-        var response = await _httpClient.DeleteAsync(BaseUrl + id);
+        await HttpClient.AddJwtTokenAsync(LocalStorage);
+        var response = await HttpClient.DeleteAsync(BaseUrl + id);
         return await GenerateResponseAsync(response);
     }
 
@@ -70,16 +65,5 @@ public abstract class SimpleHttpService<TResponse, TBody> : ISimpleHttpService<T
             return await Response.GenerateFailedResponseAsync(response.Content);
 
         return Response.GenerateSuccessfulResponse();
-    }
-
-    private static StringContent GenerateSnakeCaseJson(TBody body)
-    {
-        var jsonSerializerOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = SnakeCaseNamingPolicy.Instance
-        };
-
-        var requestBody = JsonSerializer.Serialize(body, jsonSerializerOptions);
-        return new StringContent(requestBody, Encoding.UTF8, "application/json");
     }
 }

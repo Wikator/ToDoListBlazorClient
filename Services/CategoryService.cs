@@ -5,12 +5,9 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Services;
 
-public sealed class CategoryService : SimpleHttpService<CategoryDto, CreateCategoryDto>, ICategoryService
+public sealed class CategoryService(ILocalStorageService localStorage,
+        HttpClient httpClient)
+    : SimpleHttpService<CategoryDto, CreateCategoryDto>(localStorage, httpClient), ICategoryService
 {
-    public CategoryService(ILocalStorageService localStorage,
-        HttpClient httpClient) : base(localStorage, httpClient)
-    {
-    }
-
     protected override string BaseUrl => "categories/";
 }

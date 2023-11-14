@@ -5,7 +5,7 @@ namespace ToDoListBlazorClient.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IGroupService, GroupService>();
@@ -14,7 +14,5 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITaskService, TaskService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ISubjectTimeService, SubjectTimeService>();
-
-        return services;
     }
 }
