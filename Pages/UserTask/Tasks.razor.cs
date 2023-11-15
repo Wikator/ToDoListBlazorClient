@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models.DTOs.Task;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.UserTask;
 
+[Authorize]
 // ReSharper disable once ClassNeverInstantiated.Global
 public partial class Tasks
 {
@@ -17,7 +19,7 @@ public partial class Tasks
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await TaskService.SimpleGetAsync();
+        var response = await TaskService.MyTasks();
 
         if (response.IsSuccess)
             TaskList = response.Data;

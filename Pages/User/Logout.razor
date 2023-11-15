@@ -1,7 +1,7 @@
 ﻿@page "/Logout"
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
-
+@attribute [Authorize]
 
 @if (ErrorMessage is null)
 {

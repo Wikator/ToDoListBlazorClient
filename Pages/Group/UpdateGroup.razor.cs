@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models.DTOs.Group;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Group;
 
+[Authorize(Roles = "admin")]
 public partial class UpdateGroup
 {
     [Parameter] public int? Id { get; init; }

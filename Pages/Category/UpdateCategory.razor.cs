@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models.DTOs.Category;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Category;
 
+[Authorize(Roles = "admin")]
 public partial class UpdateCategory
 {
     [Parameter] public int? Id { get; set; }

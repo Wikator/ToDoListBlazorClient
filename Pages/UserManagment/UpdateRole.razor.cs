@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using ToDoListBlazorClient.Extensions;
 using ToDoListBlazorClient.Models.DTOs.User;
@@ -6,6 +7,8 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.UserManagment;
 
+// ReSharper disable once ClassNeverInstantiated.Global
+[Authorize(Roles = "admin")]
 public partial class UpdateRole
 {
     [Inject] public required IRoleService RoleService { get; init; }

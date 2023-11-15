@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models.DTOs.Subject;
 using ToDoListBlazorClient.Models.DTOs.SubjectTime;
@@ -6,6 +7,7 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Subject;
 
+[Authorize(Roles = "admin")]
 public partial class UpdateSubject
 {
     private class UpdateSubjectModel

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models.DTOs.Category;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Category;
 
+[Authorize(Roles = "admin")]
 // ReSharper disable once ClassNeverInstantiated.Global
 public partial class Categories
 {

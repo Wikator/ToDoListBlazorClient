@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models;
 using ToDoListBlazorClient.Models.DTOs.Task;
@@ -7,6 +8,7 @@ using ToDoListBlazorClient.Services.Contracts;
 namespace ToDoListBlazorClient.Pages.UserTask;
 
 // ReSharper disable once ClassNeverInstantiated.Global
+[Authorize]
 public partial class CreateTask
 {
     [Inject] public required IGroupService GroupService { private get; init; }

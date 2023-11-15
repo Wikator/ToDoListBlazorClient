@@ -44,6 +44,9 @@ else
         </InputSelect>
         <ValidationMessage For="@(() => CreateTaskDto.CategoryId)"/>
 
+        <label for="deadline">Deadline</label>
+        <InputDate @bind-Value="@CreateTaskDto.Deadline" id="deadline" class="form-control mb-3" />
+        
         <SubmitButton>Create</SubmitButton>
     </EditForm>
 }

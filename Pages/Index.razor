@@ -1,9 +1,35 @@
 ﻿@page "/"
+@inject ITaskService TaskService
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<ErrorMessage Message="@FetchErrorMessage" />
 
-Welcome to your new app.
+@if (TaskList is not null)
+{
+    <QuickGrid Items="@TaskList">
+        <PropertyColumn Property="@(t => t.Name)" Sortable="true" />
+        <PropertyColumn Property="@(t => t.Description)" />
+        <PropertyColumn Property="@(t => t.Deadline)" Format="yyyy-MM-dd hh:mm:ss" />
+        <PropertyColumn Property="@(t => t.Category.Name)" />
+        <PropertyColumn Property="@(t => t.Subject != null ? t.Subject.Name : null)" />
+        <PropertyColumn Property="@(t => t.Group != null ? t.Group.Name : null)" />
+    </QuickGrid>
+    
+}
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+
+@code { 
+    private IQueryable<TaskDto>? TaskList { get; set; }
+    private string? FetchErrorMessage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await TaskService.SimpleGetAsync();
+
+        if (response.Data is null)
+            FetchErrorMessage = response.Message;
+        else
+            TaskList = response.Data.AsQueryable();
+    }
+}

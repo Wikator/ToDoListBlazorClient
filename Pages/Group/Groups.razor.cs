@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models.DTOs.Group;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Group;
 
+
 // ReSharper disable once ClassNeverInstantiated.Global
+[Authorize(Roles = "admin")]
 public partial class Groups
 {
     [Inject] public required IGroupService GroupService { get; init; }

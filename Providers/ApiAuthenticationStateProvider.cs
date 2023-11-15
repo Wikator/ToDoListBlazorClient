@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using ToDoListBlazorClient.Extensions;
 
 namespace ToDoListBlazorClient.Providers;
 
@@ -30,7 +31,10 @@ public class ApiAuthenticationStateProvider(ILocalStorageService localStorage) :
             return new AuthenticationState(user);
         }
 
-        var claims = decodedToken.Claims;
+        var claims = decodedToken.Claims.ToList();
+        claims.Add(new Claim(ClaimTypes.Role, claims.SingleOrDefault(c => c.Type == "role")?.Value
+                                              ?? "user"));
+        
         user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
         return new AuthenticationState(user);
     }

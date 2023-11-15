@@ -51,7 +51,7 @@ public abstract class SimpleHttpService<TResponse, TBody>(ILocalStorageService l
         return await GenerateResponseAsync(response);
     }
 
-    private static async Task<Response<T>> GenerateResponseAsync<T>(HttpResponseMessage response)
+    protected static async Task<Response<T>> GenerateResponseAsync<T>(HttpResponseMessage response)
     {
         if (!response.IsSuccessStatusCode)
             return await Response<T>.GenerateFailedResponseAsync(response.Content);

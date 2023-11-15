@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models;
 using ToDoListBlazorClient.Models.DTOs.Task;
@@ -6,6 +7,7 @@ using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.UserTask;
 
+[Authorize]
 // ReSharper disable once ClassNeverInstantiated.Global
 public partial class UpdateTask
 {

@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using ToDoListBlazorClient.Models.DTOs.Subject;
 using ToDoListBlazorClient.Services.Contracts;
 
 namespace ToDoListBlazorClient.Pages.Subject;
 
+[Authorize(Roles = "admin")]
 // ReSharper disable once ClassNeverInstantiated.Global
 public partial class CreateSubject
 {
