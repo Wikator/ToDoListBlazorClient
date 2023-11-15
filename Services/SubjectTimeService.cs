@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Blazored.LocalStorage;
 using ToDoListBlazorClient.Extensions;
+using ToDoListBlazorClient.Models;
 using ToDoListBlazorClient.Models.DTOs.SubjectTime;
 using ToDoListBlazorClient.Services.Base;
 using ToDoListBlazorClient.Services.Contracts;

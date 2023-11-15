@@ -3,6 +3,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using ToDoListBlazorClient.Extensions;
 using ToDoListBlazorClient.Helpers;
+using ToDoListBlazorClient.Models;
 using ToDoListBlazorClient.Models.DTOs.User;
 using ToDoListBlazorClient.Providers;
 using ToDoListBlazorClient.Services.Base;

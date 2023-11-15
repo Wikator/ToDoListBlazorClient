@@ -72,7 +72,7 @@ public partial class UpdateSubject
         if (Subject is null || Id is null)
             return;
 
-        var subjectDto = new CreateSubjectDto()
+        var subjectDto = new CreateSubjectDto
         {
             Name = Subject.Name
         };

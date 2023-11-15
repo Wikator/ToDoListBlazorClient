@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 
-namespace ToDoListBlazorClient.Services.Base;
+namespace ToDoListBlazorClient.Models;
 
 public class Response<T>
 {

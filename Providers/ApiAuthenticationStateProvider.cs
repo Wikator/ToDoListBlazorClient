@@ -3,7 +3,6 @@ using System.Security.Claims;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using ToDoListBlazorClient.Extensions;
 
 namespace ToDoListBlazorClient.Providers;
 

@@ -3,7 +3,7 @@
 // ReSharper disable once ClassNeverInstantiated.Global
 public class UserDto
 {
-    public int Id { get; set; }
-    public required string Email { get; set; }
-    public string? Role { get; set; }
+    public int Id { get; init; }
+    public required string Email { get; init; }
+    public string? Role { get; init; }
 }

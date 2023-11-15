@@ -16,7 +16,7 @@ else
         <TextInputField @bind-Value="@CreateTaskDto.Description" Label="Description" ValidationFor="@(() => CreateTaskDto.Description)"/>
         <label for="groups">Choose group:</label>
         <InputSelect @bind-Value="@CreateTaskDto.GroupId" name="groups" id="groups" class="form-select mb-3">
-            <option selected value="">---Choose---</option>
+            <option selected value="">None</option>
             @foreach (var option in Options["Group"])
             {
                 <option value="@option.Value">@option.Name</option>
@@ -26,7 +26,7 @@ else
 
         <label for="subjects">Choose subject:</label>
         <InputSelect @bind-Value="@CreateTaskDto.SubjectId" name="subjects" id="subjects" class="form-select mb-3">
-            <option selected value="">---Choose---</option>
+            <option selected value="">None</option>
             @foreach (var option in Options["Subject"])
             {
                 <option value="@option.Value">@option.Name</option>
@@ -36,7 +36,7 @@ else
 
         <label for="categories">Choose category:</label>
         <InputSelect @bind-Value="@CreateTaskDto.CategoryId" name="categories" id="categories" class="form-select mb-3">
-            <option selected value="">---Choose---</option>
+            <option selected value="">None</option>
             @foreach (var option in Options["Categories"])
             {
                 <option value="@option.Value">@option.Name</option>
@@ -45,7 +45,7 @@ else
         <ValidationMessage For="@(() => CreateTaskDto.CategoryId)"/>
 
         <label for="deadline">Deadline</label>
-        <InputDate @bind-Value="@CreateTaskDto.Deadline" id="deadline" class="form-control mb-3" />
+        <InputDate @bind-Value="@CreateTaskDto.Deadline" id="deadline" Type="InputDateType.DateTimeLocal" class="form-control mb-3" />
         
         <SubmitButton>Create</SubmitButton>
     </EditForm>

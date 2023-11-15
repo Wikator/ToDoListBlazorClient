@@ -10,16 +10,14 @@
     <QuickGrid Items="@TaskList">
         <PropertyColumn Property="@(t => t.Name)" Sortable="true" />
         <PropertyColumn Property="@(t => t.Description)" />
-        <PropertyColumn Property="@(t => t.Deadline)" Format="yyyy-MM-dd hh:mm:ss" />
-        <PropertyColumn Property="@(t => t.Category.Name)" />
-        <PropertyColumn Property="@(t => t.Subject != null ? t.Subject.Name : null)" />
-        <PropertyColumn Property="@(t => t.Group != null ? t.Group.Name : null)" />
+        <PropertyColumn Property="@(t => t.Deadline)" Format="yyyy-MM-dd hh:mm:ss" Sortable="true" />
+        <PropertyColumn Property="@(t => t.Category.Name)" Title="Category" />
+        <PropertyColumn Property="@(t => t.Subject != null ? t.Subject.Name : null)" Title="Subject" />
+        <PropertyColumn Property="@(t => t.Group != null ? t.Group.Name : null)" Title="Group" />
     </QuickGrid>
-    
 }
 
-
-@code { 
+@code {
     private IQueryable<TaskDto>? TaskList { get; set; }
     private string? FetchErrorMessage { get; set; }
 

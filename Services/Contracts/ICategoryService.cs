@@ -2,6 +2,4 @@
 
 namespace ToDoListBlazorClient.Services.Contracts;
 
-public interface ICategoryService : ISimpleHttpService<CategoryDto, CreateCategoryDto>
-{
-}
+public interface ICategoryService : ISimpleHttpService<CategoryDto, CreateCategoryDto>;

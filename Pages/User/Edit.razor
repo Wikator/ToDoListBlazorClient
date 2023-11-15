@@ -20,9 +20,6 @@
     private string? PutErrorMessage { get; set; }
     private int? GroupId { get; set; }
 
-    [Inject]
-    public required IMapper Mapper { get; init; }
-
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 

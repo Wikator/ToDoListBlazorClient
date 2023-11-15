@@ -17,7 +17,7 @@ else
         <TextInputField @bind-Value="@Model.Description" Label="Description" ValidationFor="@(() => Model.Description)"/>
         <label for="groups">Choose group:</label>
         <InputSelect @bind-Value="@Model.GroupId" name="groups" id="groups" class="form-select mb-3">
-            <option selected value="">---Choose---</option>
+            <option selected value="">None</option>
             @foreach (var option in Options["Group"])
             {
                 <option value="@option.Value">@option.Name</option>
@@ -27,7 +27,7 @@ else
 
         <label for="subjects">Choose subject:</label>
         <InputSelect @bind-Value="@Model.SubjectId" name="subjects" id="subjects" class="form-select mb-3">
-            <option selected value="">---Choose---</option>
+            <option selected value="">None</option>
             @foreach (var option in Options["Subject"])
             {
                 <option value="@option.Value">@option.Name</option>
@@ -37,7 +37,7 @@ else
 
         <label for="categories">Choose category:</label>
         <InputSelect @bind-Value="@Model.CategoryId" name="categories" id="categories" class="form-select mb-3">
-            <option selected value="">---Choose---</option>
+            <option selected value="">None</option>
             @foreach (var option in Options["Categories"])
             {
                 <option value="@option.Value">@option.Name</option>
@@ -45,6 +45,9 @@ else
         </InputSelect>
         <ValidationMessage For="@(() => Model.CategoryId)"/>
 
+        <label for="deadline">Deadline</label>
+        <InputDate @bind-Value="@Model.Deadline" id="deadline" Type="InputDateType.DateTimeLocal" class="form-control mb-3" />
+        
         <SubmitButton>Update</SubmitButton>
     </EditForm>
 }

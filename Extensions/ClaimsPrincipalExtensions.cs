@@ -19,9 +19,4 @@ public static class ClaimsPrincipalExtensions
         var groupId = principal.FindFirst(c => c.Type == "group")?.Value;
         return string.IsNullOrEmpty(groupId) ? null : int.Parse(groupId);
     }
-
-    public static string? GetRole(this ClaimsPrincipal principal)
-    {
-        return principal.FindFirst(c => c.Type == "role")?.Value;
-    }
 }

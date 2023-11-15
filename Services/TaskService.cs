@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using ToDoListBlazorClient.Extensions;
+using ToDoListBlazorClient.Models;
 using ToDoListBlazorClient.Models.DTOs.Task;
 using ToDoListBlazorClient.Services.Base;
 using ToDoListBlazorClient.Services.Contracts;
